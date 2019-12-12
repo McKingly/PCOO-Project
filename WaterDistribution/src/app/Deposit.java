@@ -1,5 +1,7 @@
 package app;
 
+import pt.ua.concurrent.*;
+
 public class Deposit {
 
   /** 
@@ -14,6 +16,7 @@ public class Deposit {
 
   private boolean isEmpty;
   private int line_pos, column_pos;
+  private final Mutex mtx = new Mutex();
 
   
   
@@ -36,22 +39,30 @@ public class Deposit {
    * @return int
    */
   public int useWater() {
-    assert (!isEmpty) : "No more water available";
-    waterLevel = waterLevel - 10;
-    App.waterMovementInMap(line_pos, column_pos);
+    mtx.lock();
     
-    //App.removeMark(line_pos, column_pos + 1);
-    if (waterLevel == 0) {
-      isEmpty = true;
-      System.out.println("Water deposit has run dry.");
+    try {
+      assert (!isEmpty) : "No more water available";
+      waterLevel = waterLevel - 10;
+      App.waterMovementInMap(line_pos, column_pos);
+      
+      //App.removeMark(line_pos, column_pos + 1);
+      if (waterLevel == 0) {
+        isEmpty = true;
+        System.out.println("Water deposit has run dry.");
+      }
+  
+      return 10;
+   
+    } finally{
+      mtx.unlock();
     }
-
-    return 10;
   }
 
   public void closeValve() {
 
   }
+
 
   public void stopRepleneshing() {
     App.removeMark(line_pos, column_pos + 1);

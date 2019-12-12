@@ -3,7 +3,7 @@ package app;
 import pt.ua.gboard.*;
 import pt.ua.gboard.games.*;
 import pt.ua.gboard.basic.*;
-    
+
 import java.awt.Color;
 
 public class App {
@@ -47,8 +47,14 @@ public class App {
         Position start = maze.symbolPositions(startSymbol)[0];
         System.out.println(start);
 
-        Person p = new Person(new Deposit(10,start.line(),start.column()));
+        Deposit dep = new Deposit(10,start.line(),start.column());
+        Console con = new Console();
+
+        Person p = new Person(dep, con);
         new Thread(p).start();
+
+        Worker w = new Worker(dep, con);
+        new Thread(w).start();
 
     }
 
@@ -60,9 +66,12 @@ public class App {
      */
     public static boolean waterMovementInMap (int lin, int col){
         boolean result = false;
-       //System.out.println("Position:\n  > "+lin+"\n  > "+col);
-        //System.out.println(maze.roadSymbol(lin, col));
-        
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+
         if (maze.validPosition(lin, col) && maze.isRoad(lin, col)){
             if (maze.roadSymbol(lin, col) == endSymbol){
                 return true;
@@ -88,6 +97,12 @@ public class App {
      * @param col
      */
     public static void removeMark(int lin, int col){
+
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
 
         if (maze.validPosition(lin, col) && maze.isRoad(lin, col)){
             if (maze.roadSymbol(lin, col) == actualPositionSymbol){

@@ -8,15 +8,16 @@ public class Person implements IPerson, Runnable
 {
   private int waterValue;
   private Deposit dep;
-
+  private Console con;
   
   /** 
    * @param dep
    * @return 
    */
-  public Person(Deposit dep){
+  public Person(Deposit dep, Console con){
     waterValue = 0;
     this.dep = dep;
+    this.con = con;
   }
 
   
@@ -24,7 +25,7 @@ public class Person implements IPerson, Runnable
    * @param dep
    */
   @Override
-  public boolean interactWaterDeposit(Deposit dep) {
+  public boolean interactWaterDeposit() {
     waterValue += dep.useWater();
     System.out.println("Consumed "+waterValue+" liters total.");
     return waterValue < 20;
@@ -33,18 +34,19 @@ public class Person implements IPerson, Runnable
 
   @Override
   public void interactConsole() {
-    out.print("Not implemented yet."); 
+    con.addAlert(); 
   }
 
   public void run() {
     try {
-      while (interactWaterDeposit(dep)){ 
+      while (interactWaterDeposit()){ 
         out.println("Fetching water");
       }
       System.out.println("Have all the water I need");
       dep.stopRepleneshing();
     } catch (AssertionError e) {
       out.println(e.getMessage());
+      con.addAlert();
     }
     finally{
       dep.stopRepleneshing();
