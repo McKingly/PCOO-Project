@@ -6,7 +6,7 @@ import pt.ua.gboard.basic.*;
 
 import java.awt.Color;
 
-public class App {
+public class Map {
 
     static final char startSymbol = 'D';
     static final char endSymbol = 'H';

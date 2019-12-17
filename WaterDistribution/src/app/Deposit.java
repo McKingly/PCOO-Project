@@ -44,7 +44,7 @@ public class Deposit {
     try {
       assert (!isEmpty) : "No more water available";
       waterLevel = waterLevel - 10;
-      App.waterMovementInMap(line_pos, column_pos);
+      Map.waterMovementInMap(line_pos, column_pos);
       
       //App.removeMark(line_pos, column_pos + 1);
       if (waterLevel == 0) {
@@ -65,7 +65,7 @@ public class Deposit {
 
 
   public void stopRepleneshing() {
-    App.removeMark(line_pos, column_pos + 1);
+    Map.removeMark(line_pos, column_pos + 1);
   }
 
   public void refill() {
