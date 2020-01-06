@@ -1,6 +1,7 @@
 package app;
 
 import interfaces.IPerson;
+import pt.ua.gboard.basic.Position;
 
 import static java.lang.System.out;
 
@@ -9,6 +10,7 @@ public class Person implements IPerson, Runnable
   private int waterValue;
   private Deposit dep;
   private Console con;
+  private Position position; 
   
   /** 
    * @param dep
@@ -20,6 +22,12 @@ public class Person implements IPerson, Runnable
     this.con = con;
   }
 
+  public Person(Deposit dep, Position position) {
+    waterValue = 0;
+    this.dep = dep;
+    this.position = position;
+  }
+
   
   /** 
    * @param dep
@@ -28,7 +36,7 @@ public class Person implements IPerson, Runnable
   public boolean interactWaterDeposit() {
     waterValue += dep.useWater();
     System.out.println("Consumed "+waterValue+" liters total.");
-    return waterValue < 20;
+    return waterValue < 10;
 
   }
 
@@ -43,10 +51,10 @@ public class Person implements IPerson, Runnable
         out.println("Fetching water");
       }
       System.out.println("Have all the water I need");
-      dep.stopRepleneshing();
+      //dep.stopRepleneshing();
     } catch (AssertionError e) {
       out.println(e.getMessage());
-      con.addAlert();
+      //con.addAlert();
     }
     finally{
       dep.stopRepleneshing();
