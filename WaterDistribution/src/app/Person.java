@@ -34,7 +34,7 @@ public class Person implements IPerson, Runnable
    */
   @Override
   public boolean interactWaterDeposit() {
-    waterValue += dep.useWater();
+    waterValue += dep.useWater(position);
     System.out.println("Consumed "+waterValue+" liters total.");
     return waterValue < 10;
 
@@ -50,14 +50,14 @@ public class Person implements IPerson, Runnable
       while (interactWaterDeposit()){ 
         out.println("Fetching water");
       }
-      System.out.println("Have all the water I need");
       //dep.stopRepleneshing();
     } catch (AssertionError e) {
       out.println(e.getMessage());
       //con.addAlert();
     }
     finally{
-      dep.stopRepleneshing();
+      System.out.println("Have all the water I need");
+      dep.stopRepleneshing(position);
     }
   }
 

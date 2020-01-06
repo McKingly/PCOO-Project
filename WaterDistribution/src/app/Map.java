@@ -100,7 +100,7 @@ public class Map {
      * @param col
      * @return boolean
      */
-    public static boolean waterMovementInMap(int lin, int col) {
+    public static boolean waterMovementInMap(int lin, int col, Position dest) {
         boolean result = false;
         try {
             Thread.sleep(1000);
@@ -108,13 +108,33 @@ public class Map {
 
         }
 
-        if(board.exists(lin, col+1)){
-            Gelem gelem = board.topGelem(lin, col+1);
-            if (gelem.equals(gelems[2])){
-                board.draw(gelems[3], lin, col+1, 2);    
-            }
+        if (dest.line() == lin && dest.column() == col)
+            return true;
 
+        System.out.println(lin);
+        System.out.println(col);
+
+        if(board.exists(lin, col)){
+            Gelem gelem = board.topGelem(lin, col);
+            if (gelem.equals(gelems[2])){
+                board.draw(gelems[3], lin, col, 2);
+                waterMovementInMap(lin, col+2, dest);    
+            } 
         }
+        else if(board.exists(lin-1, col)){
+            Gelem gelem = board.topGelem(lin, col);
+            if(gelem.equals(gelems[4])){
+                board.draw(gelems[3], lin, col, 2);
+                // if up
+                board.draw(gelems[7], lin-1, col+1, 2);
+                waterMovementInMap(lin-2, col+1, dest);
+                // if down 
+                // board.draw(gelems[7], lin, col+1, 2);
+                // waterMovementInMap(lin+2, col+1, dest);
+
+            }
+        }
+        else{System.out.println("Not found ");}
 
         /*
         if (maze.validPosition(lin, col) && maze.isRoad(lin, col)) {
@@ -140,15 +160,43 @@ public class Map {
      * @param lin
      * @param col
      */
-    public static void removeMark(int lin, int col) {
+    public static void removeMark(int lin, int col, Position dest) {
 
         try {
             Thread.sleep(1000);
         } catch (Exception e) {
         }
 
-        Gelem gelem = board.topGelem(lin, col+1);
-        board.erase(gelem, lin, col+1, 2);
+        if (dest.line() == lin && dest.column() == col)
+            return;
+
+        //System.out.println(lin);
+        //System.out.println(col);
+
+        if(board.exists(lin, col) && board.topGelem(lin, col,1,1).equals(gelems[2])){
+            Gelem gelem = board.topGelem(lin, col);
+            board.erase(gelem, lin, col, 2);
+            removeMark(lin, col+2, dest);
+        }
+        else if(board.exists(lin-1, col)){
+            Gelem gelem = board.topGelem(lin, col);
+            if(gelem.equals(gelems[3])){
+                board.erase(gelem, lin, col, 2);
+                // if up
+                gelem = board.topGelem(lin-1, col+1);
+
+                board.erase(gelem, lin-1, col+1, 2);
+                removeMark(lin-2, col+1, dest);
+
+                // if down 
+                // board.draw(gelems[7], lin, col+1, 2);
+                // waterMovementInMap(lin-2, col+1, dest);
+
+            }
+        }
+        else{
+            System.out.println("Bad idea");
+        }
         
         /*
         if (gelem.equals(new ImageGelem(hPipe, new GBoard("pipe", 1, 2, 1), 100.0, 1, 2))){

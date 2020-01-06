@@ -1,6 +1,7 @@
 package app;
 
 import pt.ua.concurrent.*;
+import pt.ua.gboard.basic.Position;
 
 public class Deposit {
 
@@ -38,13 +39,13 @@ public class Deposit {
   /** 
    * @return int
    */
-  public int useWater() {
+  public int useWater(Position dest) {
     mtx.lock();
     
     try {
       assert (!isEmpty) : "No more water available";
       waterLevel = waterLevel - 5;
-      Map.waterMovementInMap(line_pos, column_pos);
+      Map.waterMovementInMap(line_pos, column_pos + 1, dest);
       
       //App.removeMark(line_pos, column_pos + 1);
       if (waterLevel == 0) {
@@ -64,13 +65,28 @@ public class Deposit {
   }
 
 
-  public void stopRepleneshing() {
-    Map.removeMark(line_pos, column_pos);
+  public void stopRepleneshing(Position dest) {
+    mtx.lock();
+    
+    try {
+      Map.removeMark(line_pos, column_pos + 1, dest);
+    } finally{
+      System.out.println("Deposit stopped repleneshing water.");
+      mtx.unlock();
+    }
   }
 
   public void refill() {
-    waterLevel = maxCapacity;
-    isEmpty = false;
+    
+    mtx.lock();
+    
+    try {
+      waterLevel = maxCapacity;
+      isEmpty = false;
+    } finally{
+      System.out.println("Deposit refilled.");
+      mtx.unlock();
+    }
   }
 
   
