@@ -18,8 +18,6 @@ public class Deposit {
   private boolean isEmpty;
   private int line_pos, column_pos;
   private final Mutex mtx = new Mutex();
-
-  
   
   /** 
    * @param maxCapacity
@@ -35,7 +33,6 @@ public class Deposit {
     this.column_pos = column_pos;
   }
 
-  
   /** 
    * @return int
    */
@@ -45,7 +42,7 @@ public class Deposit {
     try {
       assert (!isEmpty) : "No more water available";
       waterLevel = waterLevel - 5;
-      Map.waterMovementInMap(line_pos, column_pos + 1, dest);
+      Map.waterMovementInMap(line_pos, column_pos + 1, dest, 5);
       
       //App.removeMark(line_pos, column_pos + 1);
       if (waterLevel == 0) {
@@ -69,7 +66,7 @@ public class Deposit {
     mtx.lock();
     
     try {
-      Map.removeMark(line_pos, column_pos + 1, dest);
+      Map.removeMark(line_pos, column_pos + 1, dest, 5);
     } finally{
       System.out.println("Deposit stopped repleneshing water.");
       mtx.unlock();

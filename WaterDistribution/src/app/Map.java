@@ -11,32 +11,36 @@ public class Map {
     static final char startSymbol = 'D';
     static final char endSymbol = 'H';
     static final char pipeSymbol = 'T';
-    static final char pipeWaterSymbol = 't'; 
+    static final char pipeWaterSymbol = 't';
     static final char biforSymbol = 'B';
     static final char markedPositionSymbol = ' ';
     static final char actualPositionSymbol = 'o';
     static final String map = "src/app/Map.txt";
-    static final String water = "src/images/water_drop.png"; 
+    static final String water = "src/images/water_drop.png";
 
     static final String hPipe = "src/images/Hpipe.png";
     static final String vPipe = "src/images/Vpipe.png";
     static final String bPipeV1 = "src/images/BifurcatedPipev1.png";
     static final String bPipeV2 = "src/images/BifurcatedPipev2.png";
     static final String bPipeV3 = "src/images/BifurcatedPipev3.png";
-    
+
     static Labyrinth maze;
-    
+
     static GBoard board = new GBoard("Map", 10, 20, 3);
 
     static Gelem[] gelems = { new StringGelem("" + startSymbol, Color.red), // Deposit symbol
             new StringGelem("" + endSymbol, Color.red), // House symbol
             new ImageGelem(hPipe, new GBoard("pipe", 1, 2, 1), 100.0, 1, 2), // Empty pipe symbol
-            new FilledGelem(Color.blue, 75.0, 1, 2), // Pipe water symbol
+            new FilledGelem(Color.blue, 80.0, 1, 2), // Pipe water symbol
             new ImageGelem(bPipeV3, new GBoard("pipe", 3, 2, 1), 100.0, 3, 2), // Split pipe symbol
             new StringGelem("" + markedPositionSymbol, Color.blue),
             new StringGelem("" + actualPositionSymbol, Color.blue),
 
-            new FilledGelem(Color.blue, 75.0, 2, 1) };
+            new FilledGelem(Color.blue, 80.0, 1, 1) };
+
+    static final int pipeLayer = 0;
+    static final int waterLayer = 1;
+    static final int numberLayer = 2;
 
     /**
      * @param args
@@ -66,33 +70,39 @@ public class Map {
          * new FilledGelem(Color.blue, 75.0, 2,1) };
          */
 
-        board.draw(gelems[2], 5, 4, 1);
-        //board.draw(gelems[3], 5, 4, 2);
-        
-        board.draw(gelems[4], 4, 6, 1);
-        //board.draw(gelems[3], 5, 6, 2);
-        //board.draw(gelems[7], 5, 7, 2);
-        //board.draw(gelems[7], 4, 7, 2);
+        board.draw(gelems[2], 5, 4, pipeLayer);
+        // board.draw(gelems[3], 5, 4, 2);
+
+        board.draw(gelems[4], 4, 6, pipeLayer);
+        // board.draw(gelems[3], 5, 6, 2);
+        // board.draw(gelems[7], 5, 7, 2);
+        // board.draw(gelems[7], 4, 7, 2);
 
         /*
-        for (int i = 0; i < extraSymbols.length; i++)
-            maze.attachGelemToRoadSymbol(extraSymbols[i], gelems[i]);
-        
-        Position start = maze.symbolPositions(startSymbol)[0];
-        */
-        
+         * for (int i = 0; i < extraSymbols.length; i++)
+         * maze.attachGelemToRoadSymbol(extraSymbols[i], gelems[i]);
+         * 
+         * Position start = maze.symbolPositions(startSymbol)[0];
+         */
+
         Position start = new Position(5, 3);
 
-        Deposit dep = new Deposit(10, start.line(), start.column());
+        Deposit dep = new Deposit(30, start.line(), start.column());
         Console con = new Console();
 
+        Position p2 = new Position(7, 7);
         Position p1 = new Position(3, 7);
-        Person p = new Person(dep, p1);
-        new Thread(p).start();
+
+        Person h2 = new Person(dep, p2);
+        new Thread(h2).start();
+        
+        Person h1 = new Person(dep, p1);
+        new Thread(h1).start();
+        
 
         Worker w = new Worker(dep, con);
-        //new Thread(w).start();
-        
+        // new Thread(w).start();
+
     }
 
     /**
@@ -100,10 +110,10 @@ public class Map {
      * @param col
      * @return boolean
      */
-    public static boolean waterMovementInMap(int lin, int col, Position dest) {
+    public static boolean waterMovementInMap(int lin, int col, Position dest, int waterVol) {
         boolean result = false;
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (Exception e) {
 
         }
@@ -111,107 +121,167 @@ public class Map {
         if (dest.line() == lin && dest.column() == col)
             return true;
 
-        System.out.println(lin);
-        System.out.println(col);
 
-        if(board.exists(lin, col)){
-            Gelem gelem = board.topGelem(lin, col);
-            if (gelem.equals(gelems[2])){
-                board.draw(gelems[3], lin, col, 2);
-                waterMovementInMap(lin, col+2, dest);    
-            } 
-        }
-        else if(board.exists(lin-1, col)){
-            Gelem gelem = board.topGelem(lin, col);
-            if(gelem.equals(gelems[4])){
-                board.draw(gelems[3], lin, col, 2);
-                // if up
-                board.draw(gelems[7], lin-1, col+1, 2);
-                waterMovementInMap(lin-2, col+1, dest);
-                // if down 
-                // board.draw(gelems[7], lin, col+1, 2);
-                // waterMovementInMap(lin+2, col+1, dest);
-
+        // Horizontal Pipe
+        if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[2])) {
+            if(board.exists(lin, col, waterLayer)){
+                MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin, col);
+                board.erase(lin, col, numberLayer, numberLayer);
+                msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) + waterVol));
+                board.draw(msgelem, lin, col, numberLayer);
             }
-        }
-        else{System.out.println("Not found ");}
+            else{
+                Gelem gelem = board.topGelem(lin, col);
+                if (gelem.equals(gelems[2])) {
+                    board.draw(gelems[3], lin, col, waterLayer);
 
-        /*
-        if (maze.validPosition(lin, col) && maze.isRoad(lin, col)) {
-            if (maze.roadSymbol(lin, col) == endSymbol) {
-                return true;
-            } else {
-                if (maze.roadSymbol(lin, col) != startSymbol)
-                    markPosition(lin, col);
-                if (waterMovementInMap(lin, col + 1)) {
-                    return true;
+                    MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
+                    board.draw(msgelem, lin,col,numberLayer);
+
                 }
             }
-        } else {
-            // System.out.println(maze.validPosition(lin, col));
-            // System.out.println(maze.isRoad(lin, col));
-        }
-        */
-        return true;
+
+            waterMovementInMap(lin, col + 2, dest, waterVol);
         
+        } 
+        // Split pipe right
+        else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col).equals(gelems[4])) {
+            //Gelem gelem = board.topGelem(lin, col);
+
+            // First straight part
+            if(!board.exists(gelems[3], lin, col, waterLayer)){
+                board.draw(gelems[3], lin, col, waterLayer);
+            }
+
+            // split up
+            if (dest.line() < lin) {
+
+                if(board.exists(lin - 1, col + 1, waterLayer)){
+                    MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin - 1, col + 1);
+                    board.erase(msgelem, lin - 1, col + 1, numberLayer);
+                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) + waterVol));
+                    board.draw(msgelem, lin - 1, col + 1, numberLayer);
+                }
+                else{
+                    board.draw(gelems[7], lin - 1, col + 1, waterLayer);
+
+                    MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
+                    board.draw(msgelem, lin - 1, col + 1,numberLayer);
+
+                }
+                waterMovementInMap(lin - 2, col + 1, dest, waterVol);
+            }
+            // split down
+            else {
+
+                if(board.exists(lin + 1, col + 1, waterLayer)){
+                    MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin + 1, col + 1);
+                    board.erase(msgelem, lin + 1, col + 1, numberLayer);
+                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) + waterVol));
+                    board.draw(msgelem, lin + 1, col + 1, numberLayer);
+                    
+                }
+                else{
+                    board.draw(gelems[7], lin + 1, col + 1, waterLayer);
+                    
+                    MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
+                    board.draw(msgelem, lin + 1, col + 1,numberLayer);
+                }
+
+                waterMovementInMap(lin + 2, col + 1, dest, waterVol);
+            }
+        } else {
+            System.out.println("Not found ");
+        }
+
+        return true;
+
     }
 
-    /**
+    
+    /** 
      * @param lin
      * @param col
+     * @param dest
      */
-    public static void removeMark(int lin, int col, Position dest) {
+    public static void removeMark(int lin, int col, Position dest, int waterVol) {
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (Exception e) {
         }
+
+
 
         if (dest.line() == lin && dest.column() == col)
             return;
 
-        //System.out.println(lin);
-        //System.out.println(col);
+        if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[2])) {
 
-        if(board.exists(lin, col) && board.topGelem(lin, col,1,1).equals(gelems[2])){
-            Gelem gelem = board.topGelem(lin, col);
-            board.erase(gelem, lin, col, 2);
-            removeMark(lin, col+2, dest);
-        }
-        else if(board.exists(lin-1, col)){
-            Gelem gelem = board.topGelem(lin, col);
-            if(gelem.equals(gelems[3])){
-                board.erase(gelem, lin, col, 2);
-                // if up
-                gelem = board.topGelem(lin-1, col+1);
+            MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin, col);
+            if(Integer.parseInt(msgelem.text()) - waterVol == 0){
+                board.erase(lin, col, waterLayer,waterLayer);
+                board.erase(lin, col, numberLayer,numberLayer);
+            }
+            else{
+                board.erase(lin, col, numberLayer, numberLayer);
+                msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) - waterVol));
+                board.draw(msgelem, lin, col, numberLayer);
+            }
+            removeMark(lin, col + 2, dest, waterVol);
 
-                board.erase(gelem, lin-1, col+1, 2);
-                removeMark(lin-2, col+1, dest);
+        } else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[4])) {
 
-                // if down 
-                // board.draw(gelems[7], lin, col+1, 2);
-                // waterMovementInMap(lin-2, col+1, dest);
+            // if up
+            if (dest.line() < lin) {
+                System.out.println("Water going UP");
+
+                MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin-1, col+1);
+                if(Integer.parseInt(msgelem.text()) - waterVol == 0){
+                    board.erase(lin-1, col+1, waterLayer, waterLayer);
+                    board.erase(lin-1, col+1, numberLayer,numberLayer);
+                }
+                else{
+                    board.erase(lin - 1, col + 1, numberLayer, numberLayer);
+                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) - waterVol));
+                    board.draw(msgelem, lin - 1, col + 1, numberLayer);
+                }
+
+                if(!(board.exists(lin-1, col+1, waterLayer) || board.exists(lin+1, col+1, waterLayer)))
+                    board.erase(lin,col,waterLayer,waterLayer);
+
+                removeMark(lin - 2, col + 1, dest, waterVol);
 
             }
-        }
-        else{
+            
+            // if down
+            else {
+                MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin+1, col+1);
+                if(Integer.parseInt(msgelem.text()) - waterVol == 0){
+                    board.erase(lin+1, col+1, waterLayer,waterLayer);
+                    board.erase(lin+1, col+1, numberLayer,numberLayer);
+                }
+                else{
+                    board.erase(lin + 1, col + 1, numberLayer, numberLayer);
+                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) - waterVol));
+                    board.draw(msgelem, lin + 1, col + 1, numberLayer);
+                }
+                
+                System.out.println(board.exists(lin-1, col+1, waterLayer));
+                System.out.println(board.exists(lin+1, col+1, waterLayer));
+
+                System.out.println(!(board.exists(lin+1, col+1, waterLayer)||board.exists(lin-1, col+1, waterLayer)));
+
+                if(!(board.exists(lin-1, col+1, waterLayer) || board.exists(lin+1, col+1, waterLayer)))
+                    board.erase(lin,col,waterLayer,waterLayer);
+                
+                removeMark(lin + 2, col + 1, dest, waterVol);
+            }
+            
+
+        } else {
             System.out.println("Bad idea");
         }
-        
-        /*
-        if (gelem.equals(new ImageGelem(hPipe, new GBoard("pipe", 1, 2, 1), 100.0, 1, 2))){
-            board.draw(gelems[3], lin, col+1, 2);    
-        }
-        */
-
-        /*
-        if (maze.validPosition(lin, col) && maze.isRoad(lin, col)) {
-            if (maze.roadSymbol(lin, col) == actualPositionSymbol) {
-                unmarkPosition(lin, col);
-                removeMark(lin, col + 1);
-            }
-        }
-        */
     }
 
     /**
@@ -243,23 +313,27 @@ public class Map {
 
             board.draw(g, line, col, 2);
 
-            //maze.detachGelemToRoadSymbol(pipeSymbol, new ImageGelem(hPipe,new GBoard("pipe", 1, 3, 1),100.0,1,3));
-            //maze.attachGelemToRoadSymbol(pipeSymbol,new FilledGelem(Color.blue, 90.0, 1, 3) );
+            // maze.detachGelemToRoadSymbol(pipeSymbol, new ImageGelem(hPipe,new
+            // GBoard("pipe", 1, 3, 1),100.0,1,3));
+            // maze.attachGelemToRoadSymbol(pipeSymbol,new FilledGelem(Color.blue, 90.0, 1,
+            // 3) );
         }
 
-        //maze.putRoadSymbol(line, col, actualPositionSymbol);
+        // maze.putRoadSymbol(line, col, actualPositionSymbol);
         GBoard.sleep(100);
     }
-    
-    /** 
+
+    /**
      * @param line
      * @param col
      */
-    public static void unmarkPosition(int line, int col){
-        if(maze.roadSymbol(line, col) == pipeSymbol){
+    public static void unmarkPosition(int line, int col) {
+        if (maze.roadSymbol(line, col) == pipeSymbol) {
             maze.putRoadSymbol(line, col, 't');
-            //maze.detachGelemToRoadSymbol(pipeSymbol, new FilledGelem(Color.blue, 90.0, 1, 3) );
-            //maze.attachGelemToRoadSymbol(pipeSymbol, new ImageGelem(hPipe,new GBoard("pipe", 1, 3, 1),100.0,1,3));
+            // maze.detachGelemToRoadSymbol(pipeSymbol, new FilledGelem(Color.blue, 90.0, 1,
+            // 3) );
+            // maze.attachGelemToRoadSymbol(pipeSymbol, new ImageGelem(hPipe,new
+            // GBoard("pipe", 1, 3, 1),100.0,1,3));
         }
         GBoard.sleep(100);
     }
