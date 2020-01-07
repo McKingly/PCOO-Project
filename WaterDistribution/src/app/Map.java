@@ -28,14 +28,10 @@ public class Map {
 
     static GBoard board = new GBoard("Map", 10, 20, 3);
 
-    static Gelem[] gelems = { new StringGelem("" + startSymbol, Color.red), // Deposit symbol
-            new StringGelem("" + endSymbol, Color.red), // House symbol
+    static Gelem[] gelems = { 
             new ImageGelem(hPipe, new GBoard("pipe", 1, 2, 1), 100.0, 1, 2), // Empty pipe symbol
             new FilledGelem(Color.blue, 80.0, 1, 2), // Pipe water symbol
             new ImageGelem(bPipeV3, new GBoard("pipe", 3, 2, 1), 100.0, 3, 2), // Split pipe symbol
-            new StringGelem("" + markedPositionSymbol, Color.blue),
-            new StringGelem("" + actualPositionSymbol, Color.blue),
-
             new FilledGelem(Color.blue, 80.0, 1, 1) };
 
     static final int pipeLayer = 0;
@@ -48,9 +44,9 @@ public class Map {
      */
     public static void main(String[] args) throws Exception {
 
-        board.draw(gelems[2], 5, 4, pipeLayer);
+        board.draw(gelems[0], 5, 4, pipeLayer);
 
-        board.draw(gelems[4], 4, 6, pipeLayer);
+        board.draw(gelems[2], 4, 6, pipeLayer);
 
         Position start = new Position(5, 3);
 
@@ -63,7 +59,7 @@ public class Map {
         Person h2 = new Person(dep, p2);
         new Thread(h2).start();
         
-        Person h1 = new Person(dep, p1);
+        Person h1 = new Person(dep, p2);
         new Thread(h1).start();
         
 
@@ -90,7 +86,7 @@ public class Map {
 
 
         // Horizontal Pipe
-        if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[2])) {
+        if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[0])) {
             if(board.exists(lin, col, waterLayer)){
                 MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin, col);
                 board.erase(lin, col, numberLayer, numberLayer);
@@ -99,8 +95,8 @@ public class Map {
             }
             else{
                 Gelem gelem = board.topGelem(lin, col);
-                if (gelem.equals(gelems[2])) {
-                    board.draw(gelems[3], lin, col, waterLayer);
+                if (gelem.equals(gelems[0])) {
+                    board.draw(gelems[1], lin, col, waterLayer);
 
                     MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
                     board.draw(msgelem, lin,col,numberLayer);
@@ -112,12 +108,12 @@ public class Map {
         
         } 
         // Split pipe right
-        else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col).equals(gelems[4])) {
+        else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col).equals(gelems[2])) {
             //Gelem gelem = board.topGelem(lin, col);
 
             // First straight part
-            if(!board.exists(gelems[3], lin, col, waterLayer)){
-                board.draw(gelems[3], lin, col, waterLayer);
+            if(!board.exists(gelems[1], lin, col, waterLayer)){
+                board.draw(gelems[1], lin, col, waterLayer);
             }
 
             // split up
@@ -130,7 +126,7 @@ public class Map {
                     board.draw(msgelem, lin - 1, col + 1, numberLayer);
                 }
                 else{
-                    board.draw(gelems[7], lin - 1, col + 1, waterLayer);
+                    board.draw(gelems[3], lin - 1, col + 1, waterLayer);
 
                     MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
                     board.draw(msgelem, lin - 1, col + 1,numberLayer);
@@ -149,7 +145,7 @@ public class Map {
                     
                 }
                 else{
-                    board.draw(gelems[7], lin + 1, col + 1, waterLayer);
+                    board.draw(gelems[3], lin + 1, col + 1, waterLayer);
                     
                     MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
                     board.draw(msgelem, lin + 1, col + 1,numberLayer);
@@ -178,12 +174,10 @@ public class Map {
         } catch (Exception e) {
         }
 
-
-
         if (dest.line() == lin && dest.column() == col)
             return;
 
-        if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[2])) {
+        if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[0])) {
 
             MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin, col);
             if(Integer.parseInt(msgelem.text()) - waterVol == 0){
@@ -197,7 +191,7 @@ public class Map {
             }
             removeMark(lin, col + 2, dest, waterVol);
 
-        } else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[4])) {
+        } else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[2])) {
 
             // if up
             if (dest.line() < lin) {
