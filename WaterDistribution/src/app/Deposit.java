@@ -66,7 +66,7 @@ public class Deposit {
     mtx.lock();
     
     try {
-      Map.removeMark(line_pos, column_pos + 1, dest, 5);
+      //Map.removeMark(line_pos, column_pos + 1, dest, 5);
     } finally{
       System.out.println("Deposit stopped repleneshing water.");
       mtx.unlock();
