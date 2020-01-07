@@ -48,42 +48,9 @@ public class Map {
      */
     public static void main(String[] args) throws Exception {
 
-        /*
-         * LabyrinthGelem.setShowRoadBoundaries();
-         * 
-         * Labyrinth.setNumberOfLayers(3);
-         * 
-         * char[] extraSymbols = { startSymbol, endSymbol, pipeSymbol, pipeWaterSymbol,
-         * biforSymbol, markedPositionSymbol, actualPositionSymbol };
-         * 
-         * maze = new Labyrinth(map, extraSymbols, 1, true);
-         */
-        /*
-         * Gelem[] gelems = { new StringGelem("" + startSymbol, Color.red), // Deposit
-         * symbol new StringGelem("" + endSymbol, Color.red), // House symbol new
-         * ImageGelem(hPipe, new GBoard("pipe", 1, 2, 1), 100.0, 1, 2), // Empty pipe
-         * symbol new FilledGelem(Color.blue, 75.0, 1, 2), // Pipe water symbol new
-         * ImageGelem(bPipeV3, new GBoard("pipe", 3, 2, 1), 100.0, 3, 2), // Split pipe
-         * symbol new StringGelem("" + markedPositionSymbol, Color.blue), new
-         * StringGelem("" + actualPositionSymbol, Color.blue),
-         * 
-         * new FilledGelem(Color.blue, 75.0, 2,1) };
-         */
-
         board.draw(gelems[2], 5, 4, pipeLayer);
-        // board.draw(gelems[3], 5, 4, 2);
 
         board.draw(gelems[4], 4, 6, pipeLayer);
-        // board.draw(gelems[3], 5, 6, 2);
-        // board.draw(gelems[7], 5, 7, 2);
-        // board.draw(gelems[7], 4, 7, 2);
-
-        /*
-         * for (int i = 0; i < extraSymbols.length; i++)
-         * maze.attachGelemToRoadSymbol(extraSymbols[i], gelems[i]);
-         * 
-         * Position start = maze.symbolPositions(startSymbol)[0];
-         */
 
         Position start = new Position(5, 3);
 
@@ -282,59 +249,5 @@ public class Map {
         } else {
             System.out.println("Bad idea");
         }
-    }
-
-    /**
-     * @param line
-     * @param col
-     * @return boolean
-     */
-    public static boolean freePosition(int line, int col) {
-        System.out.println(Thread.currentThread());
-        if (maze.roadSymbol(line, col) == actualPositionSymbol)
-            return false;
-        else
-            return true;
-    }
-
-    /**
-     * @param line
-     * @param col
-     */
-    public static void markPosition(int line, int col) {
-        GBoard.sleep(100);
-
-        // System.out.print(maze.board.gelemLayer(new ImageGelem(hPipe,new
-        // GBoard("pipe", 1, 3, 1),100.0,1,3), line, col));
-        // System.out.print(maze.board.gelemLayer(null, line, col));
-
-        if (maze.roadSymbol(line, col) == pipeSymbol) {
-            Gelem g = new ImageGelem(hPipe, new GBoard("pipe", 1, 3, 1), 100.0, 1, 3);
-
-            board.draw(g, line, col, 2);
-
-            // maze.detachGelemToRoadSymbol(pipeSymbol, new ImageGelem(hPipe,new
-            // GBoard("pipe", 1, 3, 1),100.0,1,3));
-            // maze.attachGelemToRoadSymbol(pipeSymbol,new FilledGelem(Color.blue, 90.0, 1,
-            // 3) );
-        }
-
-        // maze.putRoadSymbol(line, col, actualPositionSymbol);
-        GBoard.sleep(100);
-    }
-
-    /**
-     * @param line
-     * @param col
-     */
-    public static void unmarkPosition(int line, int col) {
-        if (maze.roadSymbol(line, col) == pipeSymbol) {
-            maze.putRoadSymbol(line, col, 't');
-            // maze.detachGelemToRoadSymbol(pipeSymbol, new FilledGelem(Color.blue, 90.0, 1,
-            // 3) );
-            // maze.attachGelemToRoadSymbol(pipeSymbol, new ImageGelem(hPipe,new
-            // GBoard("pipe", 1, 3, 1),100.0,1,3));
-        }
-        GBoard.sleep(100);
     }
 }
