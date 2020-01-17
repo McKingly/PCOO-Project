@@ -1,49 +1,70 @@
 package app;
 
 import pt.ua.gboard.*;
-import pt.ua.gboard.games.*;
-import pt.ua.gboard.shapes.FillArc;
-import pt.ua.gboard.shapes.ShapeGelem;
 import pt.ua.gboard.basic.*;
 
 import java.awt.Color;
 
 public class Map {
 
-    static final String map = "src/app/Map.txt";
+    final String DEFAULT_MAP = "src/app/Map.txt";
+    final String DEPOSIT = "src/images/WaterDeposit.png";
+    // final String CONSOLE = ; 
+    // final String PERSON =  "/images/WaterDeposit.png";
+    final String VERTICAL_PIPE = "src/images/Vpipe.png";
+    final String HORIZONTAL_PIPE = "src/images/Hpipe.png";
+    final String T_JUNCTION_PIPE_1 = "src/images/TJunctionPipe_1.png";
+    final String T_JUNCTION_PIPE_2 = "src/images/TJunctionPipe_2.png";
+    final String T_JUNCTION_PIPE_3 = "src/images/TJunctionPipe_3.png";
+    final String CORNER_PIPE_UP = "src/images/CornerPipeTop.png";
+    final String CORNER_PIPE_DOWN = "src/images/CornerPipeBottom.png";
     
-    static final String deposit = "src/images/WaterDeposit.png";
+    GBoard board = new GBoard("Map", 10, 20, 3);
 
-    static final String hPipe = "src/images/Hpipe.png";
-    static final String vPipe = "src/images/Vpipe.png";
-    static final String bPipeV1 = "src/images/BifurcatedPipev1.png";
-    static final String bPipeV2 = "src/images/BifurcatedPipev2.png";
-    static final String bPipeV3 = "src/images/BifurcatedPipev3.png";
-    static final String cPipeT = "src/images/CornerPipeTop.png";
-    static final String cPipeB = "src/images/CornerPipeBottom.png";
+    Gelem[] gelems = { 
+        new ImageGelem(HORIZONTAL_PIPE, board, 100.0, 1, 2), // Empty pipe symbol
+        new FilledGelem(Color.blue, 80.0, 1, 2), // Pipe water symbol
+        new ImageGelem(T_JUNCTION_PIPE_3, board, 100.0, 3, 2), // Split pipe symbol
+        new FilledGelem(Color.blue, 80.0, 1, 1),
+        new ImageGelem(CORNER_PIPE_UP, board, 100.0, 2, 2),
+        new ImageGelem(CORNER_PIPE_DOWN, board, 100.0, 2, 2),
+        new ImageGelem(VERTICAL_PIPE, board, 100.0, 1, 2), // Empty pipe symbol
+        new ImageGelem(T_JUNCTION_PIPE_1, board, 100.0, 3, 2), // Split pipe symbol
+        new ImageGelem(T_JUNCTION_PIPE_2, board, 100.0, 3, 2), // Split pipe symbol
+    }; 
 
-    static Labyrinth maze;
+    final int pipeLayer = 0;
+    final int waterLayer = 1;
+    final int numberLayer = 2;
 
-    static GBoard board = new GBoard("Map", 10, 20, 3);
+    String mapFile;
 
-    static Gelem[] gelems = { 
-            new ImageGelem(hPipe, board, 100.0, 1, 2), // Empty pipe symbol
-            new FilledGelem(Color.blue, 80.0, 1, 2), // Pipe water symbol
-            new ImageGelem(bPipeV3, board, 100.0, 3, 2), // Split pipe symbol
-            new FilledGelem(Color.blue, 80.0, 1, 1),
-            new ImageGelem(cPipeT, board, 100.0, 2, 2),
-            new ImageGelem(cPipeB, board, 100.0, 2, 2)
-        };
+    public Map(){
+        this.mapFile = DEFAULT_MAP;
+    
+        board.draw(gelems[0], 5, 4, pipeLayer);
 
-    static final int pipeLayer = 0;
-    static final int waterLayer = 1;
-    static final int numberLayer = 2;
+        board.draw(gelems[2], 4, 6, pipeLayer);
 
-    /**
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
+        board.draw(gelems[4], 2, 7, pipeLayer);
+
+        board.draw(gelems[5], 7, 7, pipeLayer);
+    }
+
+    public Map(String mapFile){
+        
+        this.mapFile = mapFile;
+    
+        board.draw(gelems[0], 5, 4, pipeLayer);
+
+        board.draw(gelems[2], 4, 6, pipeLayer);
+
+        board.draw(gelems[4], 2, 7, pipeLayer);
+
+        board.draw(gelems[5], 7, 7, pipeLayer);
+    }
+
+    public void drawMap(){
 
         board.draw(gelems[0], 5, 4, pipeLayer);
 
@@ -52,33 +73,6 @@ public class Map {
         board.draw(gelems[4], 2, 7, pipeLayer);
 
         board.draw(gelems[5], 7, 7, pipeLayer);
-
-        /*
-        Object[] a = { 
-            "polygon", 5, 0.1, 0.1, 0.9, 0.8, 0.7, 0.95,
-                       "color", Color.blue,
-        };
-
-        board.draw(new ShapeGelem(a), 2, 7, waterLayer);
-        */
-
-        Position start = new Position(5, 3);
-
-        Deposit dep = new Deposit(30, start.line(), start.column());
-        Console con = new Console();
-
-        Position p1 = new Position(2, 9);
-        Position p2 = new Position(8, 9);
-
-        Person h2 = new Person(dep, p2);
-        new Thread(h2).start();
-        
-        Person h1 = new Person(dep, p2);
-        new Thread(h1).start();
-        
-        Worker w = new Worker(dep, con);
-        // new Thread(w).start();
-
     }
 
     /**
@@ -86,10 +80,10 @@ public class Map {
      * @param col
      * @return boolean
      */
-    public static boolean waterMovementInMap(int lin, int col, Position dest, int waterVol) {
+    public synchronized boolean waterMovementInMap(int lin, int col, Position dest, int waterVol) {
         boolean result = false;
         try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         
             if (dest.line() == lin && dest.column() == col)
                 return true;
@@ -212,7 +206,6 @@ public class Map {
 
                 waterMovementInMap(lin + 1, col + 2, dest, waterVol);
 
-
             }
             else {
                 System.out.println("Not found ");
@@ -231,7 +224,7 @@ public class Map {
      * @param col
      * @param dest
      */
-    public static void removeMark(int lin, int col, Position dest, int waterVol) {
+    public synchronized void removeMark(int lin, int col, Position dest, int waterVol) {
 
         try {
             Thread.sleep(500);
@@ -334,4 +327,16 @@ public class Map {
             System.out.println("Bad idea");
         }
     }
+
+    public synchronized boolean validPosition(Position p){
+        try {
+            assert p != null: "Destination variable can't be null.";
+            assert p.line() >= 0 && p.line() < board.numberOfLines(): "Y position isn't valid.";;
+            assert p.column() >= 0 && p.column() < board.numberOfColumns(): "X position isn't valid";
+            
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
+    }   
 }
