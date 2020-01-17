@@ -2,11 +2,15 @@ package app;
 
 import pt.ua.concurrent.*;
 import pt.ua.gboard.basic.Position;
+import pt.ua.concurrent.MutexCV;
+
 
 public class SharedDeposit {
 
   protected final Deposit deposit;
   private final Mutex mtx = new Mutex();
+  private MutexCV waterCV = mtx.newCV();
+  private MutexCV mtxCV = mtx.newCV();
 
   /**
    * @param maxCapacity
@@ -21,13 +25,19 @@ public class SharedDeposit {
   /**
    * @return int
    */
-  public int useWater(Position dest) {
+  public int useWater(int id, Position dest) {
     mtx.lock();
 
     try {
       assert dest != null;  
       assert (!deposit.isEmpty()) : "No more water available";
+      while (!deposit.hasEnoughWater(5)){
+        System.out.println("Not enough water for Person " + id);
 
+        mtxCV.await();
+      }
+
+      System.out.println("Yummy water "+ id);
       return deposit.useWater(dest);
       
     } finally {
@@ -35,8 +45,16 @@ public class SharedDeposit {
     }
   }
 
-  public void closeValve() {
+  public void refillDeposit() {
+    mtx.lock();
 
+    try {
+      deposit.refill();
+      mtxCV.broadcast();
+    } finally {
+      System.out.println("Deposit refilled.");
+      mtx.unlock();
+    }
   }
 
   /**
@@ -49,17 +67,6 @@ public class SharedDeposit {
       deposit.stopRepleneshing(dest);
     } finally {
       System.out.println("Deposit stopped repleneshing water.");
-      mtx.unlock();
-    }
-  }
-
-  public void refill() {
-    mtx.lock();
-
-    try {
-      deposit.refill();
-    } finally {
-      System.out.println("Deposit refilled.");
       mtx.unlock();
     }
   }

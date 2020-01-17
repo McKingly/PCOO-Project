@@ -34,44 +34,35 @@ public class Deposit {
    */
   public int useWater(Position dest) {
     
-      assert (!isEmpty()) : "No more water available";
+      assert (!isEmpty() && hasEnoughWater(5)) : "No more water available";
       assert (map.validPosition(dest)) : "Destination is outside map";
       
       waterLevel = waterLevel - 5;
       map.waterMovementInMap(line_pos, column_pos + 1, dest, 5);
-      
-      //App.removeMark(line_pos, column_pos + 1);
-      /*
-      if (waterLevel == 0) {
-        System.out.println("Water deposit has run dry.");
-      }
-      */
+
       return 5;
   }
 
-  public void closeValve() {
-
+  public boolean hasEnoughWater(int volume) {
+    assert volume >= 0;
+    return waterLevel >= volume; 
   }
 
   public boolean isEmpty(){
     return waterLevel == 0;
   }
 
+  public void refill() {    
+    waterLevel = maxCapacity;
+  }
+
+
   public void stopRepleneshing(Position dest) {
     
     try {
-      map.removeMark(line_pos, column_pos + 1, dest, 10);
+      map.removeMark(line_pos, column_pos + 1, dest, 5);
     } finally{
       System.out.println("Deposit stopped repleneshing water.");
-    }
-  }
-
-  public void refill() {
-    
-    try {
-      waterLevel = maxCapacity;
-    } finally{
-      System.out.println("Deposit refilled.");
     }
   }
 

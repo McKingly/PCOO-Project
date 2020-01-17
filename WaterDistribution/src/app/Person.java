@@ -8,24 +8,30 @@ import static java.lang.System.out;
 public class Person implements IPerson, Runnable
 {
   private int waterValue;
-  private Deposit dep;
+  private SharedDeposit dep;
   private Console con;
   private Position position; 
+
+  private static int counter = 0;
+
+  private int id;
   
   /** 
    * @param dep
    * @return 
    */
-  public Person(Deposit dep, Console con){
+  public Person(SharedDeposit dep, Console con){
     waterValue = 0;
     this.dep = dep;
     this.con = con;
+    this.id = counter++;
   }
 
-  public Person(Deposit dep, Position position) {
+  public Person(SharedDeposit dep, Position position) {
     waterValue = 0;
     this.dep = dep;
     this.position = position;
+    this.id = counter++;
   }
 
   
@@ -33,10 +39,21 @@ public class Person implements IPerson, Runnable
    * @param dep
    */
   @Override
-  public boolean interactWaterDeposit() {
-    waterValue += dep.useWater(position);
-    System.out.println("Consumed "+waterValue+" liters total.");
-    return waterValue < 10;
+  public void interactDeposit() {
+    try {
+      dep.useWater(id, position);
+      //dep.stopRepleneshing();
+      Thread.sleep(200);
+    } catch (AssertionError e) {
+      out.println(e.getMessage());
+      //con.addAlert();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    finally{
+      System.out.println("Have all the water I need");
+      dep.stopRepleneshing(position);
+    }
 
   }
 
@@ -46,19 +63,7 @@ public class Person implements IPerson, Runnable
   }
 
   public void run() {
-    try {
-      while (interactWaterDeposit()){ 
-        out.println("Fetching water");
-      }
-      //dep.stopRepleneshing();
-    } catch (AssertionError e) {
-      out.println(e.getMessage());
-      //con.addAlert();
-    }
-    finally{
-      System.out.println("Have all the water I need");
-      dep.stopRepleneshing(position);
-    }
+    interactDeposit();
   }
 
 }
