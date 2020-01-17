@@ -2,6 +2,8 @@ package app;
 
 import pt.ua.concurrent.*;
 
+// Implement Actor here
+
 /**
  * Console
  */
