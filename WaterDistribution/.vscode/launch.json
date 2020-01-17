@@ -9,7 +9,7 @@
       "type": "java",
       "name": "Debug (Launch)-App<WaterDistribution>",
       "request": "launch",
-      "mainClass": "app.Map",
+      "mainClass": "app.Main",
       "projectName": "WaterDistribution",
       "vmArgs": "-enableassertions"
     }
