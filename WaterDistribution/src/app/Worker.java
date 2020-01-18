@@ -9,10 +9,10 @@ import static java.lang.System.out;
  */
 public class Worker implements IPerson, Runnable  {
 
-  private Deposit dep;
-  private Console console;
+  private SharedDeposit dep;
+  private SharedConsole console;
 
-  public Worker (Deposit dep, Console console){
+  public Worker (SharedDeposit dep, SharedConsole console){
     this.dep = dep;
     this.console = console;
   }
@@ -20,28 +20,18 @@ public class Worker implements IPerson, Runnable  {
   @Override
   public void run() {
     while(true){
-      if(console.readConsole()){
-        out.println("Turning the valve");
-        this.interactWaterDeposit();
-        break;
-      }
+      interactConsole();
+      interactDeposit();
     }
   }
 
   @Override
-  public boolean interactWaterDeposit() {
-    dep.refill();
-    out.println("Opening valve");
-    console.removeAlert();
-    return false;
+  public void interactDeposit() {
+    dep.refillDeposit();
   }
 
   @Override
   public void interactConsole() {
-    out.print(console.readConsole());
-    if(console.readConsole()){
-      out.println("Turning the valve");
-      this.interactWaterDeposit();
-    }
+    console.readConsole();
   }
 }

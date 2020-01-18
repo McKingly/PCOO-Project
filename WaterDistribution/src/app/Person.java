@@ -7,31 +7,21 @@ import static java.lang.System.out;
 
 public class Person implements IPerson, Runnable
 {
+
+  private int id;
   private int waterValue;
   private SharedDeposit dep;
-  private Console con;
+  private SharedConsole con;
   private Position position; 
 
   private static int counter = 0;
 
-  private int id;
-  
-  /** 
-   * @param dep
-   * @return 
-   */
-  public Person(SharedDeposit dep, Console con){
+  public Person(SharedDeposit dep, SharedConsole con, Position position) {
     waterValue = 0;
+    this.id = counter++;
     this.dep = dep;
     this.con = con;
-    this.id = counter++;
-  }
-
-  public Person(SharedDeposit dep, Position position) {
-    waterValue = 0;
-    this.dep = dep;
     this.position = position;
-    this.id = counter++;
   }
 
   
@@ -41,9 +31,17 @@ public class Person implements IPerson, Runnable
   @Override
   public void interactDeposit() {
     try {
-      dep.useWater(id, position);
+      //if (!dep.hasEnoughWater(5))
+        //System.out.print("Sending alert");
+        //con.addAlert();
+      if(dep.hasEnoughWater(5))
+        dep.useWater(id, position);
+      else{
+        con.addAlert();
+        dep.useWater(id, position);
+      }
       //dep.stopRepleneshing();
-      Thread.sleep(200);
+      Thread.sleep(250);
     } catch (AssertionError e) {
       out.println(e.getMessage());
       //con.addAlert();
@@ -52,7 +50,7 @@ public class Person implements IPerson, Runnable
     }
     finally{
       System.out.println("Have all the water I need");
-      dep.stopRepleneshing(position);
+      dep.stopRepleneshing(id, position);
     }
 
   }
@@ -63,6 +61,7 @@ public class Person implements IPerson, Runnable
   }
 
   public void run() {
+    System.out.print("Person "+id);
     interactDeposit();
   }
 
