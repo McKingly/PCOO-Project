@@ -5,6 +5,8 @@ import pt.ua.gboard.basic.*;
 
 import java.awt.Color;
 
+import configuration.Configuration;
+
 public class Map {
 
     final String DEFAULT_MAP = "src/app/Map.txt";
@@ -41,16 +43,25 @@ public class Map {
 
     public Map(){
         this.mapFile = DEFAULT_MAP;
+        new MutableStringGelem("0" , Color.red);
     
         board.draw(gelems[0], 5, 4, pipeLayer);
+        board.draw(new MutableStringGelem("0" , Color.red), 5,4,numberLayer);
+        //board.draw(gelems[1], 5, 4, waterLayer);
+
 
         board.draw(gelems[2], 4, 6, pipeLayer);
+        board.draw(new MutableStringGelem("0" , Color.red), 4,6+1,numberLayer);
+        board.draw(new MutableStringGelem("0" , Color.red), 4+2,6+1,numberLayer);
 
         board.draw(gelems[4], 2, 7, pipeLayer);
+        board.draw(new MutableStringGelem("0" , Color.red), 2,7+1,numberLayer);
 
         board.draw(gelems[5], 7, 7, pipeLayer);
-    }
+        board.draw(new MutableStringGelem("0" , Color.red), 7+1,7+1,numberLayer);
 
+    }
+/*
     public Map(String mapFile){
         
         this.mapFile = mapFile;
@@ -74,38 +85,37 @@ public class Map {
 
         board.draw(gelems[5], 7, 7, pipeLayer);
     }
+    */
 
     /**
      * @param lin
      * @param col
      * @return boolean
      */
-    public synchronized boolean waterMovementInMap(int lin, int col, Position dest, int waterVol) {
+    public boolean waterMovementInMap(int lin, int col, Position dest, int waterVol) {
         boolean result = false;
         try {
-            Thread.sleep(250);
+            Thread.sleep(500);
         
             if (dest.line() == lin && dest.column() == col)
                 return true;
 
-            // Horizontal Pipe
+            // Horizontal Pipe                
+            
             if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[0])) {
 
-                if(board.exists(lin, col, waterLayer)){
-                    MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin, col, numberLayer, numberLayer);
-                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) + waterVol));
-                }
-                else{
-                    Gelem gelem = board.topGelem(lin, col);
-                    if (gelem.equals(gelems[0])) {
-                        board.draw(gelems[1], lin, col, waterLayer);
+                synchronized(this){
 
-                        MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
-                        board.draw(msgelem, lin,col,numberLayer);
-
-                    }
+                MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin, col, numberLayer, numberLayer);
+                int volumeWater = Integer.parseInt(msGelem.text());
+                
+                if(volumeWater == 0){
+                    board.draw(gelems[1], lin, col, waterLayer);
                 }
 
+                msGelem.setText(String.valueOf(volumeWater + waterVol));
+                }
+                
                 waterMovementInMap(lin, col + 2, dest, waterVol);
                 
             } 
@@ -122,88 +132,64 @@ public class Map {
                 // split up
                 if (dest.line() < lin) {
 
-                    if(board.exists(lin - 1, col + 1, waterLayer)){
-                        
-                        /*
-                        StringGelem sGelem = (StringGelem)board.topGelem(lin - 1, col + 1);
-                        
-                        //Thread.sleep(500);
-                        
-                        board.erase(sGelem, lin - 1, col + 1, numberLayer);
-                        sGelem = new StringGelem(String.valueOf(Integer.parseInt(sGelem.text) + waterVol), Color.red);
-                        board.draw(sGelem, lin-1, col + 1,numberLayer);
+                    synchronized(this){
 
-                        System.out.println(board.exists(lin, col, waterLayer));
-                        System.out.println(board.topGelem(lin, col).numberOfLines());
-                        System.out.println(board.topGelem(lin, col).numberOfColumns());
-                        
-                        //Thread.sleep(500);
-                        */
+                    MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin - 1, col + 1);
+                    int volumeWater = Integer.parseInt(msGelem.text());
 
-                        MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin - 1, col + 1);
-                        msGelem.setText(String.valueOf(Integer.parseInt(msGelem.text()) + waterVol));
-                    }
-                    else{
+                    if(volumeWater == 0){
                         board.draw(gelems[3], lin - 1, col + 1, waterLayer);
-
-                        /*
-                        StringGelem sGelem = new StringGelem(String.valueOf(waterVol) , Color.red);
-                        board.draw(sGelem, lin - 1, col + 1,numberLayer);
-                        */
-
-                        MutableStringGelem msGelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
-                        board.draw(msGelem, lin - 1, col + 1,numberLayer);
-
+                    }
+                    msGelem.setText(String.valueOf(volumeWater + waterVol));
                     }
                     waterMovementInMap(lin - 2, col + 1, dest, waterVol);
                 }
                 // split down
                 else {
-
-                    if(board.exists(lin + 1, col + 1, waterLayer)){
-                        MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin + 1, col + 1);
-                        msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) + waterVol));
-                    }
-                    else{
-                        board.draw(gelems[3], lin + 1, col + 1, waterLayer);
+                    synchronized(this){
+                        MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin + 1, col + 1);
+                        int volumeWater = Integer.parseInt(msGelem.text());
                         
-                        MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
-                        board.draw(msgelem, lin + 1, col + 1,numberLayer);
+                        if(volumeWater == 0){
+                            board.draw(gelems[3], lin + 1, col + 1, waterLayer);
+                        }
+                        msGelem.setText(String.valueOf(volumeWater + waterVol));
                     }
-
                     waterMovementInMap(lin + 2, col + 1, dest, waterVol);
                 }
                 
             // Corner Pipe Top
             } else if(board.exists(lin - 1, col) && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[4])){
-                if(!board.exists(gelems[3], lin, col, waterLayer)){
+                
+                synchronized(this){
+
+                MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin - 1, col + 1);
+                int volumeWater = Integer.parseInt(msGelem.text());
+
+                if(volumeWater == 0){
                     board.draw(gelems[3], lin, col, waterLayer);
                     board.draw(gelems[3], lin-1, col+1, waterLayer);
-
-                    MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
-                    board.draw(msgelem, lin - 1, col + 1,numberLayer);
-                }
-                else{
-                    MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin - 1, col + 1);
-                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) + waterVol));
                 }
 
+                msGelem.setText(String.valueOf(volumeWater + waterVol));
+                }
                 waterMovementInMap(lin - 1, col + 2, dest, waterVol);
 
             // Corner Pipe Bottom
             } else if(board.exists(lin , col) && board.topGelem(lin , col, pipeLayer, pipeLayer).equals(gelems[5])){
-                if(!board.exists(gelems[3], lin, col, waterLayer)){
-                    board.draw(gelems[3], lin, col, waterLayer);
-                    board.draw(gelems[3], lin+1, col+1, waterLayer);
+                synchronized(this){
 
-                    MutableStringGelem msgelem = new MutableStringGelem(String.valueOf(waterVol) , Color.red);
-                    board.draw(msgelem, lin + 1, col + 1,numberLayer);
-                }
-                else {
-                    MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin + 1, col + 1);
-                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) + waterVol));
-                }
+                    MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin + 1, col + 1);
+                    int volumeWater = Integer.parseInt(msGelem.text());
 
+                    if(volumeWater == 0){
+                        board.draw(gelems[3], lin, col, waterLayer);
+                        board.draw(gelems[3], lin+1, col+1, waterLayer);
+
+                    }
+
+                    msGelem.setText(String.valueOf(volumeWater + waterVol));
+                }
                 waterMovementInMap(lin + 1, col + 2, dest, waterVol);
 
             }
@@ -217,17 +203,16 @@ public class Map {
         return true;
 
     }
-
     
     /** 
      * @param lin
      * @param col
      * @param dest
      */
-    public synchronized void removeMark(int lin, int col, Position dest, int waterVol) {
+    public void removeMark(int lin, int col, Position dest, int waterVol) {
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(Configuration.MAP_UPDATE_SPEED);
         } catch (Exception e) {
         }
 
@@ -236,16 +221,16 @@ public class Map {
 
         if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[0])) {
 
-            MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin, col);
-            if(Integer.parseInt(msgelem.text()) - waterVol == 0){
-                //board.erase(lin, col, waterLayer,waterLayer);
-                //board.erase(lin, col, numberLayer,numberLayer);
-                board.erase(lin, col, waterLayer,numberLayer);
+            synchronized(this){
+
+            MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin, col);
+            int volumeWater = Integer.parseInt(msGelem.text());
+       
+            if(volumeWater - waterVol == 0){
+                board.erase(lin, col, waterLayer,waterLayer);
             }
-            else{
-                //board.erase(lin, col, numberLayer, numberLayer);
-                msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) - waterVol));
-                //board.draw(msgelem, lin, col, numberLayer);
+
+            msGelem.setText(String.valueOf(volumeWater - waterVol));
             }
             removeMark(lin, col + 2, dest, waterVol);
 
@@ -253,23 +238,20 @@ public class Map {
 
             // if up
             if (dest.line() < lin) {
-                System.out.println("Water going UP");
+                synchronized(this){
 
                 MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin-1, col+1);
-                if(Integer.parseInt(msGelem.text()) - waterVol == 0){
-                    //board.erase(lin-1, col+1, waterLayer, waterLayer);
-                    //board.erase(lin-1, col+1, numberLayer,numberLayer);
-                    board.erase(lin-1, col+1, waterLayer,numberLayer);
+                int volumeWater = Integer.parseInt(msGelem.text());
 
+                if(volumeWater - waterVol == 0){
+                    board.erase(lin-1, col+1, waterLayer,waterLayer);
                 }
-                else{
-                    //board.erase(lin - 1, col + 1, numberLayer, numberLayer);
-                    msGelem.setText(String.valueOf(Integer.parseInt(msGelem.text()) - waterVol));
-                    //board.draw(sGelem, lin - 1, col + 1, numberLayer);
-                }
+
+                msGelem.setText(String.valueOf(volumeWater - waterVol));
 
                 if(!(board.exists(lin-1, col+1, waterLayer) || board.exists(lin+1, col+1, waterLayer)))
                     board.erase(lin,col,waterLayer,waterLayer);
+                }
 
                 removeMark(lin - 2, col + 1, dest, waterVol);
 
@@ -277,54 +259,59 @@ public class Map {
             
             // if down
             else {
-                MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin+1, col+1);
-                if(Integer.parseInt(msgelem.text()) - waterVol == 0){
-                    //board.erase(lin+1, col+1, waterLayer,waterLayer);
-                    //board.erase(lin+1, col+1, numberLayer,numberLayer);
-                    board.erase(lin+1, col+1, waterLayer,numberLayer);
+                synchronized(this){
+
+                MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin+1, col+1);
+                int volumeWater = Integer.parseInt(msGelem.text());
+
+                if(volumeWater - waterVol == 0){
+                    board.erase(lin+1, col+1, waterLayer,waterLayer);
                 }
-                else{
-                    //board.erase(lin + 1, col + 1, numberLayer, numberLayer);
-                    msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) - waterVol));
-                    //board.draw(msgelem, lin + 1, col + 1, numberLayer);
-                }
+
+                msGelem.setText(String.valueOf(volumeWater - waterVol));
                 
                 if(!(board.exists(lin-1, col+1, waterLayer) || board.exists(lin+1, col+1, waterLayer)))
                     board.erase(lin,col,waterLayer,waterLayer);
+            }
                 
                 removeMark(lin + 2, col + 1, dest, waterVol);
             }
             
         // Corner Pipe Top
         } else if(board.exists(lin - 1, col) && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[4])){
+            synchronized(this){
 
-            MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin-1, col+1);
-            if(Integer.parseInt(msgelem.text()) - waterVol == 0){
-                board.erase(lin-1, col+1, waterLayer,numberLayer);
+            MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin-1, col+1);
+            int volumeWater = Integer.parseInt(msGelem.text());
+
+            if(volumeWater - waterVol == 0){
+                board.erase(lin-1, col+1, waterLayer,waterLayer);
                 board.erase(lin, col, waterLayer, waterLayer);
             }
-            else{
-                msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) - waterVol));
-            }
+
+            msGelem.setText(String.valueOf(volumeWater - waterVol));
+        }
 
             waterMovementInMap(lin - 1, col + 2, dest, waterVol);
 
         // Corner Pipe Bottom
         } else if(board.exists(lin , col) && board.topGelem(lin , col, pipeLayer, pipeLayer).equals(gelems[5])){
+            synchronized(this){
+
+            MutableStringGelem msGelem = (MutableStringGelem)board.topGelem(lin+1, col+1);
+            int volumeWater = Integer.parseInt(msGelem.text());
             
-            MutableStringGelem msgelem = (MutableStringGelem)board.topGelem(lin+1, col+1);
-            if(Integer.parseInt(msgelem.text()) - waterVol == 0){
-                board.erase(lin+1, col+1, waterLayer,numberLayer);
+            if(volumeWater - waterVol == 0){
+                board.erase(lin+1, col+1, waterLayer,waterLayer);
                 board.erase(lin, col, waterLayer, waterLayer);
             }
-            else{
-                msgelem.setText(String.valueOf(Integer.parseInt(msgelem.text()) - waterVol));
+            msGelem.setText(String.valueOf(volumeWater - waterVol));
             }
-
             waterMovementInMap(lin + 1, col + 2, dest, waterVol);
 
         }else {
-            System.out.println("Bad idea");
+            System.out.println(lin);
+            System.out.println(col);
         }
     }
 
