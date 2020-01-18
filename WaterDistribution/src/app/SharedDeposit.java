@@ -9,8 +9,7 @@ public class SharedDeposit {
 
   protected final Deposit deposit;
   private final Mutex mtx = new Mutex();
-  private MutexCV waterCV = mtx.newCV();
-  private MutexCV mtxCV = mtx.newCV();
+  private final MutexCV mtxCV = mtx.newCV();
 
   /**
    * @param maxCapacity
@@ -30,14 +29,13 @@ public class SharedDeposit {
 
     try {
       assert dest != null;  
-      assert (!deposit.isEmpty()) : "No more water available";
+      assert (!deposit.isEmpty()) : "ASSERT > No more water available";
       while (!deposit.hasEnoughWater(5)){
-        System.out.println("Not enough water for Person " + id);
+        System.out.println("Not enough water for Person #" + id);
 
         mtxCV.await();
       }
 
-      System.out.println("Yummy water "+ id);
       return deposit.useWater(dest);
       
     } finally {
@@ -57,25 +55,29 @@ public class SharedDeposit {
     }
   }
 
+  public boolean hasEnoughWater(int volume){
+    mtx.lock();
+    boolean answer = false;
+    try {
+      answer = deposit.hasEnoughWater(volume);
+    } finally{
+      mtx.unlock();
+    }
+    return answer;
+  }
+
   /**
    * @param dest
    */
-  public void stopRepleneshing(Position dest) {
+  public void stopRepleneshing(int id, Position dest) {
     mtx.lock();
 
     try {
       deposit.stopRepleneshing(dest);
     } finally {
-      System.out.println("Deposit stopped repleneshing water.");
+      System.out.println("Thread #"+id+" needing repleneshing water.");
       mtx.unlock();
     }
   }
 
-  /**
-   * @return String
-   */
-  @Override
-  public String toString() {
-    return deposit.toString();
-  }
 }
