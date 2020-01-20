@@ -12,20 +12,21 @@ public class Deposit {
   /** 
   * How much water in liters is present in the deposit 
   */
-  private int waterLevel;
-  private int line_pos, column_pos;
   private Map map;
+  private int waterLevel;
+  private int id;
+  private Position position;
   /** 
    * @param maxCapacity
    * @param line_pos
    * @param column_pos
    * @return 
    */
-  public Deposit(int maxCapacity, int line_pos, int column_pos, Map map) {
+  public Deposit(int maxCapacity, int id, Position position, Map map) {
     this.maxCapacity = maxCapacity;
     this.waterLevel = maxCapacity;
-    this.line_pos = line_pos;
-    this.column_pos = column_pos;
+    this.id = id;
+    this.position = position;
     this.map = map;
   }
 
@@ -38,7 +39,7 @@ public class Deposit {
       assert (map.validPosition(dest)) : "Destination is outside map";
       
       waterLevel = waterLevel - 5;
-      map.waterMovementInMap(line_pos, column_pos + 1, dest, 5);
+      map.waterMovementInMap(position.line(), position.column() + 1, dest, 5);
 
       return 5;
   }
@@ -56,19 +57,25 @@ public class Deposit {
     waterLevel = maxCapacity;
   }
 
-
   public void stopRepleneshing(Position dest) {
     
     try {
-      map.removeMark(line_pos, column_pos + 1, dest, 5);
+      map.removeMark(position.line(), position.column() + 1, dest, 5);
     } finally{
       System.out.println("Deposit stopped repleneshing water.");
     }
   }
 
+  /**
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
   @Override
   public String toString() {
-    return "Deposit [column_pos=" + column_pos + ", line_pos=" + line_pos + ", maxCapacity="
+    return "Deposit [Position=" + position + ", maxCapacity="
         + maxCapacity + ", waterLevel=" + waterLevel + "]";
   }
 }

@@ -5,7 +5,7 @@ package configuration;
  */
 public class Configuration {
 
-  public static final int MAP_UPDATE_SPEED = 250;
+  public static final int MAP_UPDATE_SPEED = 500;
 
   public static final String DEFAULT_MAP = "src/app/Map.txt";
 

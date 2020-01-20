@@ -37,7 +37,7 @@ public class Person implements IPerson, Runnable
       if(dep.hasEnoughWater(5))
         dep.useWater(id, position);
       else{
-        con.addAlert();
+        con.addAlert(dep.getId());
         dep.useWater(id, position);
       }
       //dep.stopRepleneshing();
@@ -57,11 +57,11 @@ public class Person implements IPerson, Runnable
 
   @Override
   public void interactConsole() {
-    con.addAlert(); 
+    con.addAlert(dep.getId()); 
   }
 
   public void run() {
-    System.out.print("Person "+id);
+    System.out.println("Starting Thread Person #"+id);
     interactDeposit();
   }
 

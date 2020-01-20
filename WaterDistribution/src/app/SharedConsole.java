@@ -1,6 +1,7 @@
 package app;
 
 import pt.ua.concurrent.*;
+import pt.ua.gboard.basic.Position;
 
 // Implement Actor here
 
@@ -17,23 +18,36 @@ public class SharedConsole {
     this.console = console;
   }
 
-  public void addAlert(){
+  public void addAlert(int depositId){
+    assert depositId >= 0;
     mtx.lock();
     try {
-      console.addAlert();
+      console.addAlert(depositId);
       mtxCV.broadcast();
     } finally {
       mtx.unlock();
     }
   }
 
-  public void readConsole(){
+  public Position readConsole(){
     mtx.lock();
     try {
-      while(!console.hasAlert()){
+      while(console.isEmpty()){
         mtxCV.await();
       }
-      console.removeAlert();
+      Position destination = console.removeAlert();
+      console.startReplenishing(destination);
+      return destination;
+      
+    }finally{
+      mtx.unlock();
+    }
+  }
+
+  public void stopReplenishing(Position destination){
+    mtx.lock();
+    try {
+      console.stopReplenishing(destination);  
     }finally{
       mtx.unlock();
     }

@@ -35,7 +35,7 @@ public class SharedDeposit {
 
         mtxCV.await();
       }
-
+      System.out.println("DEATH");
       return deposit.useWater(dest);
       
     } finally {
@@ -79,5 +79,13 @@ public class SharedDeposit {
       mtx.unlock();
     }
   }
+
+  public int getId(){
+    return deposit.getId();
+  }
+
+  public void grab(){mtx.lock();}
+
+  public void release(){mtx.unlock();}
 
 }

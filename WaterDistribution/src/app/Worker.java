@@ -1,6 +1,7 @@
 package app;
 
 import interfaces.IPerson;
+import pt.ua.gboard.basic.Position;
 
 import static java.lang.System.out;
 
@@ -19,9 +20,14 @@ public class Worker implements IPerson, Runnable  {
 
   @Override
   public void run() {
+    System.out.println(" > STARTING WORKER THREAD #");
     while(true){
-      interactConsole();
-      interactDeposit();
+      Position destination = console.readConsole();
+      dep.refillDeposit();
+      console.stopReplenishing(destination);
+
+      //interactConsole();
+      //interactDeposit();
     }
   }
 
