@@ -21,8 +21,8 @@ public class Configuration {
   public static final char CORNER_PIPE_DOWN_SYMBOL = 'C';
 
   public static final String DEPOSIT = "src/images/WaterDeposit.png";
-  public static final String CONSOLE = "/images/WaterDeposit.png"; 
-  public static final String PERSON =  "/images/WaterDeposit.png";
+  public static final String CONSOLE = "src/images/Dam.jpg"; 
+  public static final String PERSON =  "src/images/House.png";
   public static final String HORIZONTAL_PIPE = "src/images/Hpipe.png";
   public static final String VERTICAL_PIPE = "src/images/Vpipe.png";
   public static final String T_JUNCTION_PIPE_1 = "src/images/TJunctionPipe_1.png";

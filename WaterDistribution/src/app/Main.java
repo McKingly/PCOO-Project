@@ -11,8 +11,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
         
         Map map = new Map();
-        //map.board.terminate();
-        //map.drawMap();
 
         Position start = map.depositsPositions[0];
 
