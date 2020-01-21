@@ -7,7 +7,7 @@ public class Configuration {
 
   public static final int MAP_UPDATE_SPEED = 500;
 
-  public static final String DEFAULT_MAP = "src/app/DefaultMap.txt";
+  public static final String DEFAULT_MAP = "DefaultMap.txt";
 
   public static final char DEPOSIT_SYMBOL = 'd';
   public static final char CONSOLE_SYMBOL = 'D';
@@ -20,14 +20,14 @@ public class Configuration {
   public static final char CORNER_PIPE_UP_SYMBOL = 'c';
   public static final char CORNER_PIPE_DOWN_SYMBOL = 'C';
 
-  public static final String DEPOSIT = "src/images/WaterDeposit.png";
-  public static final String CONSOLE = "src/images/Dam.jpg"; 
-  public static final String PERSON =  "src/images/House.png";
-  public static final String HORIZONTAL_PIPE = "src/images/Hpipe.png";
-  public static final String VERTICAL_PIPE = "src/images/Vpipe.png";
-  public static final String T_JUNCTION_PIPE_1 = "src/images/TJunctionPipe_1.png";
-  public static final String T_JUNCTION_PIPE_2 = "src/images/TJunctionPipe_2.png";
-  public static final String T_JUNCTION_PIPE_3 = "src/images/TJunctionPipe_3.png";
-  public static final String CORNER_PIPE_UP = "src/images/CornerPipeTop.png";
-  public static final String CORNER_PIPE_DOWN = "src/images/CornerPipeBottom.png";
+  public static final String DEPOSIT = "images/WaterDeposit.png";
+  public static final String CONSOLE = "images/Dam.jpg"; 
+  public static final String PERSON =  "images/House.png";
+  public static final String HORIZONTAL_PIPE = "images/Hpipe.png";
+  public static final String VERTICAL_PIPE = "images/Vpipe.png";
+  public static final String T_JUNCTION_PIPE_1 = "images/TJunctionPipe_1.png";
+  public static final String T_JUNCTION_PIPE_2 = "images/TJunctionPipe_2.png";
+  public static final String T_JUNCTION_PIPE_3 = "images/TJunctionPipe_3.png";
+  public static final String CORNER_PIPE_UP = "images/CornerPipeTop.png";
+  public static final String CORNER_PIPE_DOWN = "images/CornerPipeBottom.png";
 }
