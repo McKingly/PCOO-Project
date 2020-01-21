@@ -1,6 +1,7 @@
 package app;
 
 import pt.ua.gboard.basic.Position;
+import pt.ua.concurrent.Console;
 
 public class Deposit {
 
@@ -65,6 +66,7 @@ public class Deposit {
 
   public void refill() {
     waterLevel = maxCapacity;
+    Console.println(Console.YELLOW,"> DEPOSIT #" + id + " REFILLED.");
   }
 
   

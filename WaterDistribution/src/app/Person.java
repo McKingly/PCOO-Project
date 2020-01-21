@@ -10,7 +10,7 @@ public class Person extends CThread // implements IPerson
   private int id;
   private int totalWaterConsumed;
   private SharedDeposit dep;
-  private SharedConsole con;
+  private SharedAlertConsole con;
   private Position position;
 
   private static int counter = 0;
@@ -22,7 +22,7 @@ public class Person extends CThread // implements IPerson
    * @param position
    * @return 
    */
-  public Person(SharedDeposit dep, SharedConsole con, Position position) {
+  public Person(SharedDeposit dep, SharedAlertConsole con, Position position) {
     totalWaterConsumed = 0;
     this.id = counter++;
     this.dep = dep;

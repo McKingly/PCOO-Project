@@ -6,11 +6,11 @@ import pt.ua.gboard.basic.Position;
 import static java.lang.System.out;
 
 /**
- * SharedConsole
+ * SharedAlertConsole
  */
-public class SharedConsole {
+public class SharedAlertConsole {
 
-  protected Console console;
+  protected AlertConsole console;
   private final Mutex mtx = new Mutex();
   private final MutexCV mtxCV = mtx.newCV();
 
@@ -19,7 +19,8 @@ public class SharedConsole {
    * @param console
    * @return 
    */
-  public SharedConsole(Console console) {
+  public SharedAlertConsole(AlertConsole console) {
+    assert console != null;
     this.console = console;
   }
 

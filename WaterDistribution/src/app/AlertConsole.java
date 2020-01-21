@@ -1,7 +1,9 @@
 package app;
 
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.LinkedList;
+
+import pt.ua.concurrent.Console;
 
 import pt.ua.gboard.basic.Position;
 
@@ -10,7 +12,7 @@ import pt.ua.gboard.basic.Position;
 /**
  * Console
  */
-public class Console {
+public class AlertConsole {
 
   private Map map;
   private Position position;
@@ -22,7 +24,7 @@ public class Console {
    * @param map
    * @return 
    */
-  public Console(Position position, Map map) {
+  public AlertConsole(Position position, Map map) {
     this.map = map;
     this.position = position;
   }
@@ -40,7 +42,7 @@ public class Console {
    * @param depositId
    */
   public void addAlert(int depositId) {
-    System.out.println("> ALERT SENT TO CONSOLE - DEPOSIT #" + depositId + " EMPTY.");
+    Console.println(Console.YELLOW,"> ALERT SENT TO CONSOLE - DEPOSIT #" + depositId + " EMPTY.");
     queue.add(depositId);
   }
 

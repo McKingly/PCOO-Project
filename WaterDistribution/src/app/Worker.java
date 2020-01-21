@@ -13,7 +13,7 @@ public class Worker extends CThread // implements IPerson, Runnable
 {
 
   private SharedDeposit dep;
-  private SharedConsole console;
+  private SharedAlertConsole console;
 
   
   /** 
@@ -21,7 +21,7 @@ public class Worker extends CThread // implements IPerson, Runnable
    * @param console
    * @return 
    */
-  public Worker(SharedDeposit dep, SharedConsole console) {
+  public Worker(SharedDeposit dep, SharedAlertConsole console) {
     this.dep = dep;
     this.console = console;
   }

@@ -18,6 +18,7 @@ public class SharedDeposit {
    * @return
    */
   public SharedDeposit(Deposit deposit) {
+    assert deposit != null;
     this.deposit = deposit;
     ;
   }
@@ -25,7 +26,7 @@ public class SharedDeposit {
   /**
    * @return int
    */
-  public int useWater(int id, Position dest, SharedConsole con) {
+  public int useWater(int id, Position dest, SharedAlertConsole con) {
     mtx.lock();
     try {
       assert dest != null;

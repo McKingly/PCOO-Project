@@ -31,7 +31,7 @@ public class Main {
         Random rand = new Random();
 
         int i = 0;
-        SharedConsole con = new SharedConsole(new Console(map.consolesPositions[0], map));
+        SharedAlertConsole con = new SharedAlertConsole(new AlertConsole(map.consolesPositions[0], map));
 
         SharedDeposit[] dep = new SharedDeposit[map.depositsPositions.length];
         for (Position position : map.depositsPositions) {
