@@ -41,9 +41,23 @@ public class SharedAlertConsole {
 
   
   /** 
+   * @return int
+   */
+  public int readConsole() {
+    mtx.lock();
+    try {
+      while (console.isEmpty())
+        mtxCV.await();
+      return console.readConsole();
+    } finally {
+      mtx.unlock();
+    }
+  }
+
+  /** 
    * @return Position
    */
-  public Position readConsole() {
+  public Position removeAlert() {
     mtx.lock();
     try {
       while (console.isEmpty())

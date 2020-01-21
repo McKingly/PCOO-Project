@@ -19,12 +19,12 @@ public class Main {
         if (args.length > 0) {
             if (!Map.maze.validMapFile(args[0])) {
                 err.println("ERROR: invalid map file \"" + args[0] + "\"");
-                err.println("USING DEFAULT MAP");
+                err.println("Using Default Map");
                 map = new Map(Configuration.DEFAULT_MAP);
             }
             map = new Map(args[0]);
         } else {
-            out.println("USING DEFAULT MAP");
+            out.println("Using Default Map");
             map = new Map(Configuration.DEFAULT_MAP);
         }
 
@@ -39,7 +39,7 @@ public class Main {
             i++;
         }
 
-        Worker w = new Worker(dep[0], con);
+        Worker w = new Worker(dep, con);
 
         new CThread(w).start();
 

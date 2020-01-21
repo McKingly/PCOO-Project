@@ -140,8 +140,7 @@ public class Map {
 
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer,
-                            numberLayer);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer,numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater == 0) {
@@ -161,7 +160,7 @@ public class Map {
 
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater == 0) {
@@ -179,7 +178,7 @@ public class Map {
 
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater == 0) {
@@ -206,7 +205,7 @@ public class Map {
                  */
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater == 0) {
@@ -216,7 +215,7 @@ public class Map {
 
                     // split up
                     if (dest.line() == lin - 1) {
-                        msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
+                        msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1, numberLayer, numberLayer);
                         volumeWater = Integer.parseInt(msGelem.text());
 
                         if (volumeWater == 0) {
@@ -228,7 +227,7 @@ public class Map {
                     }
                     // split down
                     else {
-                        msGelem = (MutableStringGelem) board.topGelem(lin - 2, col);
+                        msGelem = (MutableStringGelem) board.topGelem(lin - 2, col, numberLayer, numberLayer);
                         volumeWater = Integer.parseInt(msGelem.text());
 
                         if (volumeWater == 0) {
@@ -245,7 +244,7 @@ public class Map {
 
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater == 0) {
@@ -255,7 +254,7 @@ public class Map {
 
                     // split up
                     if (dest.line() == lin + 1) {
-                        msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1);
+                        msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1, numberLayer, numberLayer);
                         volumeWater = Integer.parseInt(msGelem.text());
 
                         if (volumeWater == 0) {
@@ -267,7 +266,7 @@ public class Map {
                     }
                     // split down
                     else {
-                        msGelem = (MutableStringGelem) board.topGelem(lin + 2, col);
+                        msGelem = (MutableStringGelem) board.topGelem(lin + 2, col, numberLayer, numberLayer);
                         volumeWater = Integer.parseInt(msGelem.text());
 
                         if (volumeWater == 0) {
@@ -284,7 +283,7 @@ public class Map {
 
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater == 0) {
@@ -292,7 +291,7 @@ public class Map {
                     }
                     msGelem.setText(String.valueOf(volumeWater + waterVol));
 
-                    msGelem = (MutableStringGelem) board.topGelem(lin + 2, col);
+                    msGelem = (MutableStringGelem) board.topGelem(lin + 2, col, numberLayer, numberLayer);
 
                     volumeWater = Integer.parseInt(msGelem.text());
 
@@ -308,7 +307,7 @@ public class Map {
 
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater == 0) {
@@ -342,7 +341,7 @@ public class Map {
 
                     synchronized (this) {
 
-                        MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
+                        MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1, numberLayer, numberLayer);
                         int volumeWater = Integer.parseInt(msGelem.text());
 
                         if (volumeWater == 0) {
@@ -355,7 +354,7 @@ public class Map {
                 // split down
                 else {
                     synchronized (this) {
-                        MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1);
+                        MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1, numberLayer, numberLayer);
                         int volumeWater = Integer.parseInt(msGelem.text());
 
                         if (volumeWater == 0) {
@@ -406,7 +405,7 @@ public class Map {
             // System.out.println("Horizontal Pipe");
             synchronized (this) {
 
-                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                 int volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -422,7 +421,7 @@ public class Map {
             // Configuration.CORNER_PIPE_UP_SYMBOL) {
             // System.out.println("Corner Pipe top");
             synchronized (this) {
-                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
+                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1, numberLayer, numberLayer);
                 int volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -442,7 +441,7 @@ public class Map {
             // System.out.println("Corner Pipe Down");
             synchronized (this) {
 
-                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1);
+                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1, numberLayer, numberLayer);
                 int volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -460,7 +459,7 @@ public class Map {
 
             synchronized (this) {
 
-                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                 int volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0)
@@ -470,7 +469,7 @@ public class Map {
 
                 // split up
                 if (dest.line() == lin - 1) {
-                    msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
+                    msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1, numberLayer, numberLayer);
                     volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater - waterVol == 0)
@@ -482,7 +481,7 @@ public class Map {
                 }
                 // split down
                 else {
-                    msGelem = (MutableStringGelem) board.topGelem(lin - 2, col);
+                    msGelem = (MutableStringGelem) board.topGelem(lin - 2, col, numberLayer, numberLayer);
                     volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater - waterVol == 0)
@@ -498,7 +497,7 @@ public class Map {
 
             synchronized (this) {
 
-                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                 int volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -509,7 +508,7 @@ public class Map {
 
                 // split up
                 if (dest.line() == lin + 1) {
-                    msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1);
+                    msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1, numberLayer, numberLayer);
                     volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater - waterVol == 0)
@@ -521,7 +520,7 @@ public class Map {
                 }
                 // split down
                 else {
-                    msGelem = (MutableStringGelem) board.topGelem(lin + 2, col);
+                    msGelem = (MutableStringGelem) board.topGelem(lin + 2, col, numberLayer, numberLayer);
                     volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater - waterVol == 0)
@@ -540,7 +539,7 @@ public class Map {
             // System.out.println("T-Junction Pipe V3 Goes UP");
             synchronized (this) {
 
-                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                 int volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -549,7 +548,7 @@ public class Map {
 
                 msGelem.setText(String.valueOf(volumeWater - waterVol));
 
-                msGelem = (MutableStringGelem) board.topGelem(lin - 2, col);
+                msGelem = (MutableStringGelem) board.topGelem(lin - 2, col, numberLayer, numberLayer);
                 volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -568,7 +567,7 @@ public class Map {
             // System.out.println("T-Junction Pipe V3 Goes DOWN");
             synchronized (this) {
 
-                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
+                MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col, numberLayer, numberLayer);
                 int volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -577,7 +576,7 @@ public class Map {
 
                 msGelem.setText(String.valueOf(volumeWater - waterVol));
 
-                msGelem = (MutableStringGelem) board.topGelem(lin + 2, col);
+                msGelem = (MutableStringGelem) board.topGelem(lin + 2, col, numberLayer, numberLayer);
                 volumeWater = Integer.parseInt(msGelem.text());
 
                 if (volumeWater - waterVol == 0) {
@@ -599,7 +598,7 @@ public class Map {
             if (dest.line() < lin) {
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater - waterVol == 0) {
@@ -620,7 +619,7 @@ public class Map {
             else {
                 synchronized (this) {
 
-                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1);
+                    MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin + 1, col + 1, numberLayer, numberLayer);
                     int volumeWater = Integer.parseInt(msGelem.text());
 
                     if (volumeWater - waterVol == 0) {

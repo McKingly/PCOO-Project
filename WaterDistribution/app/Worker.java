@@ -11,42 +11,30 @@ import static java.lang.System.out;
  */
 public class Worker extends CThread // implements IPerson, Runnable
 {
-
-  private SharedDeposit dep;
   private SharedAlertConsole console;
-
+  private SharedDeposit[] deposits;
   
   /** 
    * @param dep
    * @param console
    * @return 
    */
-  public Worker(SharedDeposit dep, SharedAlertConsole console) {
-    this.dep = dep;
+  public Worker(SharedDeposit[] deposits, SharedAlertConsole console) {
     this.console = console;
+    this.deposits = deposits;
   }
 
   @Override
   public void run() {
     out.println("> STARTING WORKER THREAD #");
+    int depositId;
+    Position destination;
     while (true) {
-      Position destination = console.readConsole();
+      depositId = console.readConsole();
+      destination = console.removeAlert();
       console.startReplenishing(destination);
-      dep.refillDeposit();
+      deposits[depositId].refillDeposit();
       console.stopReplenishing(destination);
-
-      // interactConsole();
-      // interactDeposit();
     }
-  }
-
-  // @Override
-  public void interactDeposit() {
-    dep.refillDeposit();
-  }
-
-  // @Override
-  public void interactConsole() {
-    console.readConsole();
   }
 }

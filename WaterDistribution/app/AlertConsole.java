@@ -46,13 +46,20 @@ public class AlertConsole {
     queue.add(depositId);
   }
 
+  /** 
+   * @return int
+   */
+  public int readConsole() {
+    assert !queue.isEmpty();
+    return queue.peek() ;
+  }
   
   /** 
    * @return Position
    */
   public Position removeAlert() {
-    int depositId = queue.remove();
-    return map.depositsPositions[depositId];
+    assert !queue.isEmpty();
+    return map.depositsPositions[queue.remove()];
   }
 
   

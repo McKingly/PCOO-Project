@@ -43,8 +43,7 @@ public class Person extends CThread // implements IPerson
 
         totalWaterConsumed += waterConsumed;
         if (totalWaterConsumed >= 25) {
-          Console.println(Console.BLUE,
-              " > PERSON THREAD #" + id + " CONSUMED " + totalWaterConsumed + "LITTERS TOTAL.");
+          Console.println(Console.BACK ," > PERSON THREAD #" + id + " CONSUMED A TOTAL OF" + totalWaterConsumed + " LITTERS OF WATER.");
           break;
         }
       }
