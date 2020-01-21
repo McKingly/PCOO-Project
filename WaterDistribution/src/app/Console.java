@@ -1,6 +1,5 @@
 package app;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -28,7 +27,7 @@ public class Console {
   }
 
   public void addAlert(int depositId){
-    System.out.println("> ALERT SENT TO CONSOLE");
+    System.out.println("> ALERT SENT TO CONSOLE - DEPOSIT #"+depositId+" EMPTY.");
     queue.add(depositId);
   }
 

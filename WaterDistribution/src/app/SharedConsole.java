@@ -3,10 +3,10 @@ package app;
 import pt.ua.concurrent.*;
 import pt.ua.gboard.basic.Position;
 
-// Implement Actor here
+import static java.lang.System.out;
 
 /**
- * Console
+ * SharedConsole
  */
 public class SharedConsole {
 
@@ -32,13 +32,18 @@ public class SharedConsole {
   public Position readConsole(){
     mtx.lock();
     try {
-      while(console.isEmpty()){
+      while(console.isEmpty())
         mtxCV.await();
-      }
-      Position destination = console.removeAlert();
-      console.startReplenishing(destination);
-      return destination;
-      
+      return console.removeAlert();
+    }finally{
+      mtx.unlock();
+    }
+  }
+
+  public void startReplenishing(Position destination){
+    mtx.lock();
+    try {
+      console.startReplenishing(destination);  
     }finally{
       mtx.unlock();
     }

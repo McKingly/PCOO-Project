@@ -1,11 +1,14 @@
 package app;
 
 import interfaces.IPerson;
+import pt.ua.concurrent.CThread;
+import pt.ua.concurrent.Event;
+import pt.ua.concurrent.Console;
 import pt.ua.gboard.basic.Position;
 
 import static java.lang.System.out;
 
-public class Person implements IPerson, Runnable
+public class Person extends CThread //implements IPerson
 {
 
   private int id;
@@ -13,6 +16,7 @@ public class Person implements IPerson, Runnable
   private SharedDeposit dep;
   private SharedConsole con;
   private Position position; 
+  private Event event;
 
   private static int counter = 0;
 
@@ -24,45 +28,37 @@ public class Person implements IPerson, Runnable
     this.position = position;
   }
 
+  public Person(SharedDeposit dep, SharedConsole con, Position position, Event event) {
+    waterValue = 0;
+    this.id = counter++;
+    this.dep = dep;
+    this.con = con;
+    this.position = position;
+    this.event = event;
+  }
   
   /** 
    * @param dep
-   */
-  @Override
+   
+  //@Override
   public void interactDeposit() {
-    try {
-      //if (!dep.hasEnoughWater(5))
-        //System.out.print("Sending alert");
-        //con.addAlert();
-      if(dep.hasEnoughWater(5))
-        dep.useWater(id, position);
-      else{
-        con.addAlert(dep.getId());
-        dep.useWater(id, position);
-      }
-      //dep.stopRepleneshing();
-      Thread.sleep(250);
-    } catch (AssertionError e) {
-      out.println(e.getMessage());
-      //con.addAlert();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-    finally{
-      System.out.println("Have all the water I need");
-      dep.stopRepleneshing(id, position);
-    }
-
-  }
-
-  @Override
+      dep.useWater(id, position);
+  }*/
+  
+  //@Override
   public void interactConsole() {
     con.addAlert(dep.getId()); 
   }
 
   public void run() {
-    System.out.println("Starting Thread Person #"+id);
-    interactDeposit();
+    out.println(" > STARTING PERSON THREAD #"+id);
+    Console.println(Console.BACKGROUND_BLUE, "TESTE");
+    try {
+      Console.println(Console.RED," > PERSON THREAD #"+id+" CONSUMED "+ dep.useWater(id, position, con));
+      dep.startRepleneshing(id, position);
+      dep.stopRepleneshing(id, position);
+    } catch (AssertionError e) {
+      //con.addAlert(dep.getId());
+    }
   }
-
 }

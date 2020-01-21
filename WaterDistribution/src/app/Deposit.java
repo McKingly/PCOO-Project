@@ -39,7 +39,7 @@ public class Deposit {
       assert (map.validPosition(dest)) : "Destination is outside map";
       
       waterLevel = waterLevel - 5;
-      map.waterMovementInMap(position.line(), position.column() + 1, dest, 5);
+      //map.waterMovementInMap(position.line(), position.column() + 1, dest, 5);
 
       return 5;
   }
@@ -57,12 +57,17 @@ public class Deposit {
     waterLevel = maxCapacity;
   }
 
-  public void stopRepleneshing(Position dest) {
-    
+  public void startRepleneshing(Position dest) { 
+    try {
+      map.waterMovementInMap(position.line(), position.column() + 1, dest, 5);
+    } finally{
+    }
+  }
+
+  public void stopRepleneshing(Position dest) { 
     try {
       map.removeMark(position.line(), position.column() + 1, dest, 5);
     } finally{
-      System.out.println("Deposit stopped repleneshing water.");
     }
   }
 

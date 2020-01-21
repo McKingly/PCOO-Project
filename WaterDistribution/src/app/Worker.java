@@ -1,6 +1,7 @@
 package app;
 
 import interfaces.IPerson;
+import pt.ua.concurrent.CThread;
 import pt.ua.gboard.basic.Position;
 
 import static java.lang.System.out;
@@ -8,7 +9,8 @@ import static java.lang.System.out;
 /**
  * Worker
  */
-public class Worker implements IPerson, Runnable  {
+public class Worker extends CThread //implements IPerson, Runnable  
+{
 
   private SharedDeposit dep;
   private SharedConsole console;
@@ -20,9 +22,10 @@ public class Worker implements IPerson, Runnable  {
 
   @Override
   public void run() {
-    System.out.println(" > STARTING WORKER THREAD #");
+    out.println("> STARTING WORKER THREAD #");
     while(true){
       Position destination = console.readConsole();
+      console.startReplenishing(destination);
       dep.refillDeposit();
       console.stopReplenishing(destination);
 
@@ -31,12 +34,12 @@ public class Worker implements IPerson, Runnable  {
     }
   }
 
-  @Override
+  //@Override
   public void interactDeposit() {
     dep.refillDeposit();
   }
 
-  @Override
+  //@Override
   public void interactConsole() {
     console.readConsole();
   }
