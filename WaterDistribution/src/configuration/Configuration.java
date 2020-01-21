@@ -7,7 +7,7 @@ public class Configuration {
 
   public static final int MAP_UPDATE_SPEED = 500;
 
-  public static final String DEFAULT_MAP = "src/app/Map.txt";
+  public static final String DEFAULT_MAP = "src/app/DefaultMap.txt";
 
   public static final char DEPOSIT_SYMBOL = 'd';
   public static final char CONSOLE_SYMBOL = 'D';
