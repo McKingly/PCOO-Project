@@ -9,13 +9,19 @@ import static java.lang.System.out;
 /**
  * Worker
  */
-public class Worker extends CThread //implements IPerson, Runnable  
+public class Worker extends CThread // implements IPerson, Runnable
 {
 
   private SharedDeposit dep;
   private SharedConsole console;
 
-  public Worker (SharedDeposit dep, SharedConsole console){
+  
+  /** 
+   * @param dep
+   * @param console
+   * @return 
+   */
+  public Worker(SharedDeposit dep, SharedConsole console) {
     this.dep = dep;
     this.console = console;
   }
@@ -23,23 +29,23 @@ public class Worker extends CThread //implements IPerson, Runnable
   @Override
   public void run() {
     out.println("> STARTING WORKER THREAD #");
-    while(true){
+    while (true) {
       Position destination = console.readConsole();
       console.startReplenishing(destination);
       dep.refillDeposit();
       console.stopReplenishing(destination);
 
-      //interactConsole();
-      //interactDeposit();
+      // interactConsole();
+      // interactDeposit();
     }
   }
 
-  //@Override
+  // @Override
   public void interactDeposit() {
     dep.refillDeposit();
   }
 
-  //@Override
+  // @Override
   public void interactConsole() {
     console.readConsole();
   }

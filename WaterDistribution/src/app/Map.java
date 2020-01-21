@@ -33,6 +33,11 @@ public class Map {
 
     static Labyrinth maze = null;
 
+    
+    /** 
+     * @param mapFile
+     * @return 
+     */
     public Map(String mapFile) {
 
         maze = new Labyrinth(mapFile, extraSymbols, 1, true);
@@ -152,7 +157,7 @@ public class Map {
             // Corner Pipe Top
             else if (board.exists(lin - 1, col)
                     && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[8])) {
-                //System.out.println("Corner Pipe Top");
+                // System.out.println("Corner Pipe Top");
 
                 synchronized (this) {
 
@@ -170,7 +175,7 @@ public class Map {
 
                 // Corner Pipe Bottom
             } else if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[9])) {
-                //System.out.println("Corner Pipe Bottom");
+                // System.out.println("Corner Pipe Bottom");
 
                 synchronized (this) {
 
@@ -187,17 +192,18 @@ public class Map {
                 }
                 waterMovementInMap(lin + 1, col + 2, dest, waterVol);
 
-            } else if (board.exists(lin - 2, col) && board.topGelem(lin - 2, col, pipeLayer, pipeLayer).equals(gelems[6])) {
+            } else if (board.exists(lin - 2, col)
+                    && board.topGelem(lin - 2, col, pipeLayer, pipeLayer).equals(gelems[6])) {
 
-                //System.out.println("Split Pipe V2 GO UP ");
+                // System.out.println("Split Pipe V2 GO UP ");
                 /*
-                System.out.println(lin+" "+col);
-                System.out.println(board.topGelem(lin - 2, col, pipeLayer, pipeLayer).x(0, 0));
-                System.out.println(board.topGelem(lin - 2, col, pipeLayer, pipeLayer).y(0, 0));
-                System.out.println(board.topGelem(lin, col, pipeLayer, pipeLayer).x(0, 0));
-                System.out.println(board.topGelem(lin, col, pipeLayer, pipeLayer).y(0, 0));
-                System.out.println("TRGIN");
-                */
+                 * System.out.println(lin+" "+col); System.out.println(board.topGelem(lin - 2,
+                 * col, pipeLayer, pipeLayer).x(0, 0)); System.out.println(board.topGelem(lin -
+                 * 2, col, pipeLayer, pipeLayer).y(0, 0));
+                 * System.out.println(board.topGelem(lin, col, pipeLayer, pipeLayer).x(0, 0));
+                 * System.out.println(board.topGelem(lin, col, pipeLayer, pipeLayer).y(0, 0));
+                 * System.out.println("TRGIN");
+                 */
                 synchronized (this) {
 
                     MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
@@ -210,7 +216,7 @@ public class Map {
 
                     // split up
                     if (dest.line() == lin - 1) {
-                        msGelem = (MutableStringGelem) board.topGelem(lin-1, col+1);
+                        msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
                         volumeWater = Integer.parseInt(msGelem.text());
 
                         if (volumeWater == 0) {
@@ -235,7 +241,7 @@ public class Map {
                 }
             } else if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[6])) {
 
-                //System.out.println("Split Pipe V2 GO Down");
+                // System.out.println("Split Pipe V2 GO Down");
 
                 synchronized (this) {
 
@@ -274,7 +280,7 @@ public class Map {
                 }
             } else if (board.exists(lin, col - 1) && board.topGelem(lin, col - 1).equals(gelems[7])) {
 
-                //System.out.println("Split Pipe V3 GO DOWN");
+                // System.out.println("Split Pipe V3 GO DOWN");
 
                 synchronized (this) {
 
@@ -298,7 +304,7 @@ public class Map {
                 waterMovementInMap(lin + 3, col, dest, waterVol);
             } else if (board.exists(lin - 2, col - 1) && board.topGelem(lin - 2, col - 1).equals(gelems[7])) {
 
-                //System.out.println("Split Pipe V3 GO UP");
+                // System.out.println("Split Pipe V3 GO UP");
 
                 synchronized (this) {
 
@@ -324,7 +330,7 @@ public class Map {
             // Split pipe 3
             else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col).equals(gelems[7])) {
 
-                //System.out.println("Split Pipe V3 Entrance Left");
+                // System.out.println("Split Pipe V3 Entrance Left");
 
                 // First straight part
                 if (!board.exists(gelems[10], lin, col, waterLayer)) {
@@ -397,7 +403,7 @@ public class Map {
         if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[3])) {
             // if (maze.roadSymbol(lin, col) == Configuration.HORIZONTAL_PIPE_SYMBOL) {
 
-            //System.out.println("Horizontal Pipe");
+            // System.out.println("Horizontal Pipe");
             synchronized (this) {
 
                 MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
@@ -414,7 +420,7 @@ public class Map {
         } else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[8])) {
             // else if (maze.roadSymbol(lin - 1, col) ==
             // Configuration.CORNER_PIPE_UP_SYMBOL) {
-            //System.out.println("Corner Pipe top");
+            // System.out.println("Corner Pipe top");
             synchronized (this) {
                 MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin - 1, col + 1);
                 int volumeWater = Integer.parseInt(msGelem.text());
@@ -447,7 +453,7 @@ public class Map {
             }
             removeMark(lin + 1, col + 2, dest, waterVol);
 
-        } else if (board.exists(lin - 2, col ) && board.topGelem(lin - 2, col, pipeLayer, pipeLayer).equals(gelems[6])) {
+        } else if (board.exists(lin - 2, col) && board.topGelem(lin - 2, col, pipeLayer, pipeLayer).equals(gelems[6])) {
             // else if (maze.roadSymbol(lin - 1, col) ==
             // Configuration.T_JUNCTION_PIPE_2_SYMBOL) {
             // System.out.println("T-Junction V2 Pipe Water Goes Up");
@@ -488,7 +494,7 @@ public class Map {
                 }
             }
         } else if (board.exists(lin, col) && board.topGelem(lin, col, pipeLayer, pipeLayer).equals(gelems[6])) {
-            //System.out.println("T-Junction V2 Pipe Water Goes Down");
+            // System.out.println("T-Junction V2 Pipe Water Goes Down");
 
             synchronized (this) {
 
@@ -531,7 +537,7 @@ public class Map {
             // else if (maze.roadSymbol(lin - 1, col) ==
             // Configuration.T_JUNCTION_PIPE_3_SYMBOL) {
 
-            //System.out.println("T-Junction Pipe V3 Goes UP");
+            // System.out.println("T-Junction Pipe V3 Goes UP");
             synchronized (this) {
 
                 MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
@@ -555,11 +561,11 @@ public class Map {
 
             removeMark(lin - 3, col, dest, waterVol);
 
-        }else if (board.exists(lin, col - 1) && board.topGelem(lin, col - 1, pipeLayer, pipeLayer).equals(gelems[7])) {
+        } else if (board.exists(lin, col - 1) && board.topGelem(lin, col - 1, pipeLayer, pipeLayer).equals(gelems[7])) {
             // else if (maze.roadSymbol(lin + 1, col) ==
             // Configuration.T_JUNCTION_PIPE_3_SYMBOL) {
 
-            //System.out.println("T-Junction Pipe V3 Goes DOWN");
+            // System.out.println("T-Junction Pipe V3 Goes DOWN");
             synchronized (this) {
 
                 MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(lin, col);
@@ -583,12 +589,11 @@ public class Map {
 
             removeMark(lin + 3, col, dest, waterVol);
 
-
         } else if (board.exists(lin - 1, col) && board.topGelem(lin - 1, col, pipeLayer, pipeLayer).equals(gelems[7])) {
             // else if (maze.roadSymbol(lin, col+1) ==
             // Configuration.T_JUNCTION_PIPE_3_SYMBOL) {
 
-            //System.out.println("T-Junction Pipe V3");
+            // System.out.println("T-Junction Pipe V3");
 
             // if up
             if (dest.line() < lin) {
@@ -637,6 +642,11 @@ public class Map {
         }
     }
 
+    
+    /** 
+     * @param p
+     * @return boolean
+     */
     public synchronized boolean validPosition(Position p) {
         try {
             assert p != null : "Destination variable can't be null.";

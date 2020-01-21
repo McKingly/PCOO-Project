@@ -1,64 +1,55 @@
 package app;
 
-import interfaces.IPerson;
 import pt.ua.concurrent.CThread;
-import pt.ua.concurrent.Event;
 import pt.ua.concurrent.Console;
 import pt.ua.gboard.basic.Position;
 
-import static java.lang.System.out;
-
-public class Person extends CThread //implements IPerson
+public class Person extends CThread // implements IPerson
 {
 
   private int id;
-  private int waterValue;
+  private int totalWaterConsumed;
   private SharedDeposit dep;
   private SharedConsole con;
-  private Position position; 
-  private Event event;
+  private Position position;
 
   private static int counter = 0;
 
-  public Person(SharedDeposit dep, SharedConsole con, Position position) {
-    waterValue = 0;
-    this.id = counter++;
-    this.dep = dep;
-    this.con = con;
-    this.position = position;
-  }
-
-  public Person(SharedDeposit dep, SharedConsole con, Position position, Event event) {
-    waterValue = 0;
-    this.id = counter++;
-    this.dep = dep;
-    this.con = con;
-    this.position = position;
-    this.event = event;
-  }
   
   /** 
    * @param dep
-   
-  //@Override
-  public void interactDeposit() {
-      dep.useWater(id, position);
-  }*/
-  
-  //@Override
-  public void interactConsole() {
-    con.addAlert(dep.getId()); 
+   * @param con
+   * @param position
+   * @return 
+   */
+  public Person(SharedDeposit dep, SharedConsole con, Position position) {
+    totalWaterConsumed = 0;
+    this.id = counter++;
+    this.dep = dep;
+    this.con = con;
+    this.position = position;
   }
 
   public void run() {
-    out.println(" > STARTING PERSON THREAD #"+id);
-    Console.println(Console.BACKGROUND_BLUE, "TESTE");
+    Console.println(Console.GREEN, "> STARTING PERSON THREAD #" + id);
     try {
-      Console.println(Console.RED," > PERSON THREAD #"+id+" CONSUMED "+ dep.useWater(id, position, con));
-      dep.startRepleneshing(id, position);
-      dep.stopRepleneshing(id, position);
+      int waterConsumed;
+      while (true) {
+        waterConsumed = dep.useWater(id, position, con);
+        Console.println(Console.BLUE,
+            " > PERSON THREAD #" + id + " CONSUMING " + waterConsumed + " LITTERS FROM DEPOSIT #" + dep.getId());
+        dep.startRepleneshing(id, position);
+        dep.stopRepleneshing(id, position);
+
+        totalWaterConsumed += waterConsumed;
+        if (totalWaterConsumed >= 25) {
+          Console.println(Console.BLUE,
+              " > PERSON THREAD #" + id + " CONSUMED " + totalWaterConsumed + "LITTERS TOTAL.");
+          break;
+        }
+      }
     } catch (AssertionError e) {
-      //con.addAlert(dep.getId());
+      // con.addAlert(dep.getId());
     }
   }
 }

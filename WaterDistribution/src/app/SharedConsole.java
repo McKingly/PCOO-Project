@@ -14,11 +14,20 @@ public class SharedConsole {
   private final Mutex mtx = new Mutex();
   private final MutexCV mtxCV = mtx.newCV();
 
+  
+  /** 
+   * @param console
+   * @return 
+   */
   public SharedConsole(Console console) {
     this.console = console;
   }
 
-  public void addAlert(int depositId){
+  
+  /** 
+   * @param depositId
+   */
+  public void addAlert(int depositId) {
     assert depositId >= 0;
     mtx.lock();
     try {
@@ -29,31 +38,43 @@ public class SharedConsole {
     }
   }
 
-  public Position readConsole(){
+  
+  /** 
+   * @return Position
+   */
+  public Position readConsole() {
     mtx.lock();
     try {
-      while(console.isEmpty())
+      while (console.isEmpty())
         mtxCV.await();
       return console.removeAlert();
-    }finally{
+    } finally {
       mtx.unlock();
     }
   }
 
-  public void startReplenishing(Position destination){
+  
+  /** 
+   * @param destination
+   */
+  public void startReplenishing(Position destination) {
     mtx.lock();
     try {
-      console.startReplenishing(destination);  
-    }finally{
+      console.startReplenishing(destination);
+    } finally {
       mtx.unlock();
     }
   }
 
-  public void stopReplenishing(Position destination){
+  
+  /** 
+   * @param destination
+   */
+  public void stopReplenishing(Position destination) {
     mtx.lock();
     try {
-      console.stopReplenishing(destination);  
-    }finally{
+      console.stopReplenishing(destination);
+    } finally {
       mtx.unlock();
     }
   }

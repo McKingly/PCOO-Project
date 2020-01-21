@@ -7,7 +7,7 @@ import pt.ua.concurrent.MutexCV;
 public class SharedDeposit {
 
   protected final Deposit deposit;
-  
+
   private final Mutex mtx = new Mutex();
   private final MutexCV mtxCV = mtx.newCV();
 
@@ -19,7 +19,7 @@ public class SharedDeposit {
    */
   public SharedDeposit(Deposit deposit) {
     this.deposit = deposit;
-;
+    ;
   }
 
   /**
@@ -27,17 +27,16 @@ public class SharedDeposit {
    */
   public int useWater(int id, Position dest, SharedConsole con) {
     mtx.lock();
-    System.out.println("THE LOCK IS MINE #"+id);
     try {
-      assert dest != null;  
-      //assert (!deposit.isEmpty()) : "ASSERT > No more water available";
-      while (!deposit.hasEnoughWater(5)){
-        System.out.println("> PERSON THREAD #"+id+" NEEDS MORE WATER");
+      assert dest != null;
+      // assert (!deposit.isEmpty()) : "ASSERT > No more water available";
+      while (!deposit.hasEnoughWater(5)) {
+        System.out.println("> PERSON THREAD #" + id + " NEEDS MORE WATER");
         con.addAlert(deposit.getId());
         mtxCV.await();
       }
       return deposit.useWater(dest);
-      
+
     } finally {
       mtx.unlock();
     }
@@ -55,23 +54,33 @@ public class SharedDeposit {
     }
   }
 
-  public boolean hasEnoughWater(int volume){
+  
+  /** 
+   * @param volume
+   * @return boolean
+   */
+  public boolean hasEnoughWater(int volume) {
     mtx.lock();
     boolean answer = false;
     try {
       answer = deposit.hasEnoughWater(volume);
-    } finally{
+    } finally {
       mtx.unlock();
     }
     return answer;
   }
 
-  public void startRepleneshing(int id, Position dest){
+  
+  /** 
+   * @param id
+   * @param dest
+   */
+  public void startRepleneshing(int id, Position dest) {
     mtx.lock();
     try {
       deposit.startRepleneshing(dest);
     } finally {
-      System.out.println("PERSON THREAD #"+id+" STARTED FETCHING WATER.");
+      System.out.println("PERSON THREAD #" + id + " STARTED FETCHING WATER.");
       mtx.unlock();
     }
   }
@@ -84,20 +93,29 @@ public class SharedDeposit {
     try {
       deposit.stopRepleneshing(dest);
     } finally {
-      System.out.println("PERSON THREAD #"+id+" STOPPED FETCHING WATER.");
+      System.out.println("PERSON THREAD #" + id + " STOPPED FETCHING WATER.");
       mtx.unlock();
     }
   }
 
-
-  public int getId(){
+  
+  /** 
+   * @return int
+   */
+  public int getId() {
     return deposit.getId();
   }
 
-  public void grab(){mtx.lock();}
+  public void grab() {
+    mtx.lock();
+  }
 
-  public void release(){mtx.unlock();}
+  public void release() {
+    mtx.unlock();
+  }
 
-  public void waitForWater(){ mtxCV.await();}
+  public void waitForWater() {
+    mtxCV.await();
+  }
 
 }
