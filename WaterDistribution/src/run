@@ -1,3 +1,0 @@
-#!/bin/bash
-
-java -ea -cp /usr/local/java/ext/pt.ua.concurrent.jar:/usr/local/java/ext/pt.ua.gboard.jar:. app.Main $*
