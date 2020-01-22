@@ -27,10 +27,10 @@ public class SharedDeposit {
    * @return int
    */
   public int useWater(int id, Position dest, SharedAlertConsole con) {
+    assert con != null;
+    assert dest != null;
     mtx.lock();
     try {
-      assert dest != null;
-      // assert (!deposit.isEmpty()) : "ASSERT > No more water available";
       while (!deposit.hasEnoughWater(5)) {
         Console.println(Console.YELLOW, "> PERSON THREAD #" + id + " NEEDS MORE WATER");
         con.addAlert(deposit.getId());
@@ -44,8 +44,8 @@ public class SharedDeposit {
   }
 
   public void refillDeposit(int id) {
+    assert id >= 0;
     mtx.lock();
-
     try {
       deposit.refill();
       mtxCV.broadcast();
@@ -61,6 +61,7 @@ public class SharedDeposit {
    * @return boolean
    */
   public boolean hasEnoughWater(int volume) {
+    assert volume > 0;
     mtx.lock();
     boolean answer = false;
     try {
@@ -106,17 +107,4 @@ public class SharedDeposit {
   public int getId() {
     return deposit.getId();
   }
-
-  public void grab() {
-    mtx.lock();
-  }
-
-  public void release() {
-    mtx.unlock();
-  }
-
-  public void waitForWater() {
-    mtxCV.await();
-  }
-
 }

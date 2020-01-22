@@ -3,7 +3,6 @@ package app;
 import pt.ua.concurrent.*;
 import pt.ua.gboard.basic.Position;
 
-import static java.lang.System.out;
 
 /**
  * SharedAlertConsole

@@ -23,11 +23,14 @@ public class Person extends CThread // implements IPerson
    * @return 
    */
   public Person(SharedDeposit dep, SharedAlertConsole con, Position position) {
-    totalWaterConsumed = 0;
-    this.id = counter++;
-    this.dep = dep;
+    assert dep != null;
+    assert con != null;
+    assert position != null;
     this.con = con;
+    this.dep = dep;
+    this.id = counter++;
     this.position = position;
+    this.totalWaterConsumed = 0;
   }
 
   public void run() {

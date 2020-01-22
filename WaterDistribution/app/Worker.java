@@ -1,6 +1,5 @@
 package app;
 
-import interfaces.IPerson;
 import pt.ua.concurrent.CThread;
 import pt.ua.gboard.basic.Position;
 

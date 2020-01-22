@@ -3,6 +3,8 @@ package app;
 import configuration.Configuration;
 import pt.ua.concurrent.CThread;
 import pt.ua.gboard.basic.*;
+import pt.ua.gboard.games.Labyrinth;
+
 import static java.lang.System.*;
 
 import java.util.Random;
@@ -17,7 +19,7 @@ public class Main {
 
         Map map = null;
         if (args.length > 0) {
-            if (!Map.maze.validMapFile(args[0])) {
+            if (!Labyrinth.validMapFile(args[0])) {
                 err.println("ERROR: invalid map file \"" + args[0] + "\"");
                 err.println("Using Default Map and Update Speed");
                 map = new Map(Configuration.DEFAULT_MAP,Configuration.MAP_UPDATE_SPEED);

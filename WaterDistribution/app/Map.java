@@ -124,8 +124,9 @@ public class Map {
      * @param dest
      */
     public void updateMap(int lin, int col, Position dest, int newWaterVol) {
+      assert validPosition(dest);
 
-      board.sleep(updateSpeed);
+      GBoard.sleep(updateSpeed);
         
             if (dest.line() == lin && dest.column() == col)
               return;
@@ -222,11 +223,10 @@ public class Map {
    * @param p
    * @return boolean
    */
-  public synchronized boolean validPosition(Position p) {
+  public boolean validPosition(Position p) {
     try {
       assert p != null : "Destination variable can't be null.";
       assert p.line() >= 0 && p.line() < board.numberOfLines() : "Y position isn't valid.";
-      ;
       assert p.column() >= 0 && p.column() < board.numberOfColumns() : "X position isn't valid";
 
       return true;

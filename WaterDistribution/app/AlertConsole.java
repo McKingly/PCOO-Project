@@ -18,13 +18,13 @@ public class AlertConsole {
   private Position position;
   private Queue<Integer> queue = new LinkedList<Integer>();
 
-  
   /** 
    * @param position
    * @param map
    * @return 
    */
   public AlertConsole(Position position, Map map) {
+    assert map != null: "Map can't be null";
     this.map = map;
     this.position = position;
   }
@@ -42,6 +42,7 @@ public class AlertConsole {
    * @param depositId
    */
   public void addAlert(int depositId) {
+    assert depositId > 0;
     if(!queue.contains(depositId)){
       Console.println(Console.YELLOW,"> ALERT SENT TO CONSOLE - DEPOSIT #" + depositId + " EMPTY.");
       queue.add(depositId);
