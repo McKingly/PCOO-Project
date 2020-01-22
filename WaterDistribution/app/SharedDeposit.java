@@ -32,7 +32,7 @@ public class SharedDeposit {
       assert dest != null;
       // assert (!deposit.isEmpty()) : "ASSERT > No more water available";
       while (!deposit.hasEnoughWater(5)) {
-        System.out.println("> PERSON THREAD #" + id + " NEEDS MORE WATER");
+        Console.println(Console.YELLOW, "> PERSON THREAD #" + id + " NEEDS MORE WATER");
         con.addAlert(deposit.getId());
         mtxCV.await();
       }
@@ -43,14 +43,14 @@ public class SharedDeposit {
     }
   }
 
-  public void refillDeposit() {
+  public void refillDeposit(int id) {
     mtx.lock();
 
     try {
       deposit.refill();
       mtxCV.broadcast();
     } finally {
-      System.out.println("> DEPOSIT REFILLED.");
+      Console.println(Console.GREEN, "> DEPOSIT REFILLED BY WORKER #"+id);
       mtx.unlock();
     }
   }
@@ -79,9 +79,9 @@ public class SharedDeposit {
   public void startRepleneshing(int id, Position dest) {
     mtx.lock();
     try {
+      System.out.println("> PERSON THREAD #" + id + " FETCHING WATER.");
       deposit.startRepleneshing(dest);
     } finally {
-      System.out.println("PERSON THREAD #" + id + " STARTED FETCHING WATER.");
       mtx.unlock();
     }
   }
@@ -94,7 +94,7 @@ public class SharedDeposit {
     try {
       deposit.stopRepleneshing(dest);
     } finally {
-      System.out.println("PERSON THREAD #" + id + " STOPPED FETCHING WATER.");
+      System.out.println("> PERSON THREAD #" + id + " STOPPED FETCHING WATER.");
       mtx.unlock();
     }
   }

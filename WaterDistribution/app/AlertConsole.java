@@ -42,8 +42,10 @@ public class AlertConsole {
    * @param depositId
    */
   public void addAlert(int depositId) {
-    Console.println(Console.YELLOW,"> ALERT SENT TO CONSOLE - DEPOSIT #" + depositId + " EMPTY.");
-    queue.add(depositId);
+    if(!queue.contains(depositId)){
+      Console.println(Console.YELLOW,"> ALERT SENT TO CONSOLE - DEPOSIT #" + depositId + " EMPTY.");
+      queue.add(depositId);
+    }
   }
 
   /** 

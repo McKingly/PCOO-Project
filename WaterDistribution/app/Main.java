@@ -19,13 +19,16 @@ public class Main {
         if (args.length > 0) {
             if (!Map.maze.validMapFile(args[0])) {
                 err.println("ERROR: invalid map file \"" + args[0] + "\"");
-                err.println("Using Default Map");
-                map = new Map(Configuration.DEFAULT_MAP);
+                err.println("Using Default Map and Update Speed");
+                map = new Map(Configuration.DEFAULT_MAP,Configuration.MAP_UPDATE_SPEED);
             }
-            map = new Map(args[0]);
+            else if (args.length == 1)
+                map = new Map(args[0],Configuration.MAP_UPDATE_SPEED);
+            else
+                map = new Map(args[0],Integer.parseInt(args[1]));
         } else {
-            out.println("Using Default Map");
-            map = new Map(Configuration.DEFAULT_MAP);
+            out.println("Using Default Map and Update Speed");
+            map = new Map(Configuration.DEFAULT_MAP, Configuration.MAP_UPDATE_SPEED);
         }
 
         Random rand = new Random();
@@ -39,10 +42,9 @@ public class Main {
             i++;
         }
 
-        Worker w = new Worker(dep, con);
-
-        new CThread(w).start();
-
+        new CThread(new Worker(0,dep, con)).start();
+        new CThread(new Worker(1,dep, con)).start();
+        
         CThread[] t = new CThread[map.personsPositions.length];
 
         i = 0;

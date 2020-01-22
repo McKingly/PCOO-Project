@@ -36,14 +36,14 @@ public class Person extends CThread // implements IPerson
       int waterConsumed;
       while (true) {
         waterConsumed = dep.useWater(id, position, con);
-        Console.println(Console.BLUE,
-            " > PERSON THREAD #" + id + " CONSUMING " + waterConsumed + " LITTERS FROM DEPOSIT #" + dep.getId());
         dep.startRepleneshing(id, position);
+        Console.println(Console.BLUE,
+            "> PERSON THREAD #" + id + " CONSUMING " + waterConsumed + " LITTERS FROM DEPOSIT #" + dep.getId());
         dep.stopRepleneshing(id, position);
 
         totalWaterConsumed += waterConsumed;
-        if (totalWaterConsumed >= 25) {
-          Console.println(Console.BACK ," > PERSON THREAD #" + id + " CONSUMED A TOTAL OF" + totalWaterConsumed + " LITTERS OF WATER.");
+        if (totalWaterConsumed >= 15) {
+          Console.println(Console.GREEN,"> PERSON THREAD #" + id + " CONSUMED A TOTAL OF:\n    > " + totalWaterConsumed + " LITTERS OF WATER.");
           break;
         }
       }
