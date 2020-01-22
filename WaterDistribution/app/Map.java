@@ -126,7 +126,7 @@ public class Map {
     public boolean waterMovementInMap(int lin, int col, Position dest, int waterVol) {
         boolean result = false;
         try {
-            board.sleep(Configuration.MAP_UPDATE_SPEED);
+            board.sleep(updateSpeed);
 
             if (dest.line() == lin && dest.column() == col)
                 return true;
@@ -385,7 +385,7 @@ public class Map {
     public void removeMark(int lin, int col, Position dest, int waterVol) {
 
         try {
-            board.sleep(Configuration.MAP_UPDATE_SPEED);
+            board.sleep(updateSpeed);
         
 
             if (dest.line() == lin && dest.column() == col)
