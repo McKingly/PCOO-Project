@@ -5,7 +5,7 @@ package configuration;
  */
 public class Configuration {
 
-  public static final int MAP_UPDATE_SPEED = 750;
+  public static final int MAP_UPDATE_SPEED = 350;
 
   public static final String DEFAULT_MAP = "AltMap2.txt";
 

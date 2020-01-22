@@ -42,7 +42,7 @@ public class Person extends CThread // implements IPerson
         dep.stopRepleneshing(id, position);
 
         totalWaterConsumed += waterConsumed;
-        if (totalWaterConsumed >= 15) {
+        if (totalWaterConsumed >= 10) {
           Console.println(Console.GREEN,"> PERSON THREAD #" + id + " CONSUMED A TOTAL OF:\n    > " + totalWaterConsumed + " LITTERS OF WATER.");
           break;
         }

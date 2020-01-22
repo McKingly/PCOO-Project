@@ -75,7 +75,7 @@ public class Deposit {
    */
   public void startRepleneshing(Position dest) {
     try {
-      map.waterMovementInMap(position.line(), position.column() + 1, dest, 5);
+      map.updateMap(position.line(), position.column() + 1, dest, 5);
     } finally {
     }
   }
@@ -86,7 +86,7 @@ public class Deposit {
    */
   public void stopRepleneshing(Position dest) {
     try {
-      map.removeMark(position.line(), position.column() + 1, dest, 5);
+      map.updateMap(position.line(), position.column() + 1, dest, -5);
     } finally {
     }
   }

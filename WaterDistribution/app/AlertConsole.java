@@ -69,7 +69,7 @@ public class AlertConsole {
    * @param destination
    */
   public void startReplenishing(Position destination) {
-    map.waterMovementInMap(position.line(), position.column() + 1, destination, 20);
+    map.updateMap(position.line(), position.column() + 1, destination, 20);
   }
 
   
@@ -77,6 +77,6 @@ public class AlertConsole {
    * @param destination
    */
   public void stopReplenishing(Position destination) {
-    map.removeMark(position.line(), position.column() + 1, destination, 20);
+    map.updateMap(position.line(), position.column() + 1, destination, -20);
   }
 }
