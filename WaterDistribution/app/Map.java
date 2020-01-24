@@ -128,7 +128,7 @@ public class Map {
    * @param dest
    * @param newWaterVol
    */
-  public synchronized void updateMap(int lin, int col, Position dest, int newWaterVol) {
+  public void updateMap(int lin, int col, Position dest, int newWaterVol) {
     assert validPosition(dest);
 
     GBoard.sleep(updateSpeed);
@@ -260,7 +260,7 @@ public class Map {
    * @param newWaterVol
    * @param isPipeHorizontal
    */
-  private void updateVolumeWaterGelem(Position p, int newWaterVol, boolean isPipeHorizontal) {
+  private synchronized void updateVolumeWaterGelem(Position p, int newWaterVol, boolean isPipeHorizontal) {
 
     MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(p.line(), p.column(), numberLayer, numberLayer);
     int pipeWaterVol = Integer.parseInt(msGelem.text());
