@@ -71,10 +71,11 @@ public class SharedAlertConsole {
   /** 
    * @param destination
    */
-  public void startReplenishing(Position destination) {
+  public void startReplenishing(Position destination, int waterVol) {
+    assert waterVol >=0;
     mtx.lock();
     try {
-      console.startReplenishing(destination);
+      console.startStopReplenishing(destination,waterVol);
     } finally {
       mtx.unlock();
     }
@@ -84,10 +85,11 @@ public class SharedAlertConsole {
   /** 
    * @param destination
    */
-  public void stopReplenishing(Position destination) {
+  public void stopReplenishing(Position destination, int waterVol) {
+    assert waterVol>=0;
     mtx.lock();
     try {
-      console.stopReplenishing(destination);
+      console.startStopReplenishing(destination, -waterVol);
     } finally {
       mtx.unlock();
     }

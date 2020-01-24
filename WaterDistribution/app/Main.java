@@ -7,8 +7,6 @@ import pt.ua.gboard.games.Labyrinth;
 
 import static java.lang.System.*;
 
-import java.util.Random;
-
 public class Main {
 
     /**
@@ -32,15 +30,13 @@ public class Main {
             out.println("Using Default Map and Update Speed");
             map = new Map(Configuration.DEFAULT_MAP, Configuration.MAP_UPDATE_SPEED);
         }
-
-        Random rand = new Random();
-
-        int i = 0;
+        
         SharedAlertConsole con = new SharedAlertConsole(new AlertConsole(map.consolesPositions[0], map));
-
+        
+        int i = 0;
         SharedDeposit[] dep = new SharedDeposit[map.depositsPositions.length];
         for (Position position : map.depositsPositions) {
-            dep[i] = new SharedDeposit(new Deposit(10, i, position, map));
+            dep[i] = new SharedDeposit(new Deposit(Configuration.DEPOSIT_MAX_WATER_CAPACITY, i, position, map));
             i++;
         }
 
@@ -51,13 +47,9 @@ public class Main {
 
         i = 0;
         for (Position position : map.personsPositions) {
-            t[i] = new CThread(new Person(dep[rand.nextInt(map.depositsPositions.length)], con, position));
+            t[i] = new CThread(new House(dep, con, position, Configuration.HOUSE_WATER_CONSUMPTION_RATE));
             t[i].start();
             i++;
         }
-
-        /*
-         * for (i = 0; i < t.length; i++) { t[i].join(); } System.exit(0);
-         */
     }
 }

@@ -25,25 +25,19 @@ public class Deposit {
    * @return
    */
   public Deposit(int maxCapacity, int id, Position position, Map map) {
-    this.maxCapacity = maxCapacity;
-    this.waterLevel = maxCapacity;
     this.id = id;
-    this.position = position;
     this.map = map;
+    this.position = position;
+    this.waterLevel = maxCapacity;
+    this.maxCapacity = maxCapacity;
   }
 
-  /**
-   * @return int
-   */
-  public int useWater(Position dest) {
-
-    assert (!isEmpty() && hasEnoughWater(5)) : "No more water available";
+  public void useWater(Position dest, int waterVolume) {
+    assert waterVolume >= 0 : "Water consumed can't be lower than 0";
+    assert (!isEmpty() && hasEnoughWater(waterVolume)) : "No more water available";
     assert (map.validPosition(dest)) : "Destination is outside map";
 
-    waterLevel = waterLevel - 5;
-    // map.waterMovementInMap(position.line(), position.column() + 1, dest, 5);
-
-    return 5;
+    waterLevel -= waterVolume;
   }
 
   
@@ -73,22 +67,10 @@ public class Deposit {
   /** 
    * @param dest
    */
-  public void startRepleneshing(Position dest) {
-    try {
-      map.updateMap(position.line(), position.column() + 1, dest, 5);
-    } finally {
-    }
-  }
-
-  
-  /** 
-   * @param dest
-   */
-  public void stopRepleneshing(Position dest) {
-    try {
-      map.updateMap(position.line(), position.column() + 1, dest, -5);
-    } finally {
-    }
+  public void startStopRepleneshing(Position dest, int volWater) {
+    assert dest != null;
+    assert map.validPosition(dest);
+    map.updateMap(position.line(), position.column() + 1, dest, volWater);
   }
 
   /**
@@ -98,12 +80,10 @@ public class Deposit {
     return id;
   }
 
-  
-  /** 
-   * @return String
+  /**
+   * @return the maxCapacity
    */
-  @Override
-  public String toString() {
-    return "Deposit [Position=" + position + ", maxCapacity=" + maxCapacity + ", waterLevel=" + waterLevel + "]";
+  public int getMaxCapacity() {
+    return maxCapacity;
   }
 }

@@ -26,17 +26,18 @@ public class SharedDeposit {
   /**
    * @return int
    */
-  public int useWater(int id, Position dest, SharedAlertConsole con) {
+  public void useWater(int id, Position dest, SharedAlertConsole con, int waterVol) {
     assert con != null;
     assert dest != null;
+    assert waterVol >=0;
     mtx.lock();
     try {
-      while (!deposit.hasEnoughWater(5)) {
-        Console.println(Console.YELLOW, "> PERSON THREAD #" + id + " NEEDS MORE WATER");
+      while (!deposit.hasEnoughWater(waterVol)) {
+        Console.println(Console.YELLOW, "> HOUSE #" + id + " NEEDS MORE WATER THAN IS AVAILABLE");
         con.addAlert(deposit.getId());
         mtxCV.await();
       }
-      return deposit.useWater(dest);
+      deposit.useWater(dest,waterVol);
 
     } finally {
       mtx.unlock();
@@ -77,11 +78,12 @@ public class SharedDeposit {
    * @param id
    * @param dest
    */
-  public void startRepleneshing(int id, Position dest) {
+  public void startRepleneshing(int id, Position dest, int waterVol) {
+    assert waterVol > 0;
     mtx.lock();
     try {
-      System.out.println("> PERSON THREAD #" + id + " FETCHING WATER.");
-      deposit.startRepleneshing(dest);
+      System.out.println("> HOUSE #" + id + " FETCHING WATER.");
+      deposit.startStopRepleneshing(dest, waterVol);
     } finally {
       mtx.unlock();
     }
@@ -90,12 +92,12 @@ public class SharedDeposit {
   /**
    * @param dest
    */
-  public void stopRepleneshing(int id, Position dest) {
+  public void stopRepleneshing(int id, Position dest, int waterVol) {
     mtx.lock();
     try {
-      deposit.stopRepleneshing(dest);
+      deposit.startStopRepleneshing(dest, -waterVol);
     } finally {
-      System.out.println("> PERSON THREAD #" + id + " STOPPED FETCHING WATER.");
+      System.out.println("> HOUSE #" + id + " STOPPED FETCHING WATER.");
       mtx.unlock();
     }
   }
@@ -106,5 +108,12 @@ public class SharedDeposit {
    */
   public int getId() {
     return deposit.getId();
+  }
+
+  /** 
+   * @return int
+   */
+  public int getMaxCapacity() {
+    return deposit.getMaxCapacity();
   }
 }

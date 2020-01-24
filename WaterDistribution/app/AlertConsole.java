@@ -69,15 +69,9 @@ public class AlertConsole {
   /** 
    * @param destination
    */
-  public void startReplenishing(Position destination) {
-    map.updateMap(position.line(), position.column() + 1, destination, 20);
-  }
-
-  
-  /** 
-   * @param destination
-   */
-  public void stopReplenishing(Position destination) {
-    map.updateMap(position.line(), position.column() + 1, destination, -20);
+  public void startStopReplenishing(Position destination, int waterVol) {
+    assert destination != null;
+    assert map.validPosition(destination);
+    map.updateMap(position.line(), position.column() + 1, destination,  waterVol);
   }
 }
