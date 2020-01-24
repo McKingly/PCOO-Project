@@ -30,4 +30,8 @@ public class Configuration {
   public static final String T_JUNCTION_PIPE_3 = "images/TJunctionPipe_3.png";
   public static final String CORNER_PIPE_UP = "images/CornerPipeTop.png";
   public static final String CORNER_PIPE_DOWN = "images/CornerPipeBottom.png";
+
+  public static final int HOUSE_WATER_CONSUMPTION_RATE = 3;
+  public static final int HOUSE_MAX_WATER_CONSUMPTION = 9;
+  public static final int DEPOSIT_MAX_WATER_CAPACITY = 15;
 }
