@@ -47,7 +47,7 @@ public class Main {
 
         i = 0;
         for (Position position : map.personsPositions) {
-            t[i] = new CThread(new House(dep, con, position, Configuration.HOUSE_WATER_CONSUMPTION_RATE));
+            t[i] = new CThread(new House(dep, con, position, Configuration.HOUSE_WATER_CONSUMPTION_RATE, Configuration.HOUSE_MAX_WATER_CONSUMPTION));
             t[i].start();
             i++;
         }

@@ -10,11 +10,11 @@ public class House extends CThread // implements IPerson
 {
 
   private int id;
-  private int totalWaterConsumed;
   private final Position position;
   private final int waterConsumptionRate;
-  
-  private SharedDeposit[] deposits;
+  private final int maxWaterConsumption;
+
+  private final SharedDeposit[] deposits;
   private final SharedAlertConsole console;
   
   private static int counter = 0;
@@ -29,7 +29,7 @@ public class House extends CThread // implements IPerson
    * @param waterConsumptionRate
    * @return 
    */
-  public House(SharedDeposit[] deposits, SharedAlertConsole console, Position position, int waterConsumptionRate) {
+  public House(SharedDeposit[] deposits, SharedAlertConsole console, Position position, int waterConsumptionRate, int maxWaterConsumption) {
     assert deposits != null;
     assert console != null;
     assert position != null;
@@ -37,8 +37,8 @@ public class House extends CThread // implements IPerson
     
     this.id = counter++;
     this.position = position;
-    this.totalWaterConsumed = 0;
     this.waterConsumptionRate = waterConsumptionRate;
+    this.maxWaterConsumption = maxWaterConsumption;
     
     this.deposits = deposits;
     this.console = console;
@@ -48,6 +48,7 @@ public class House extends CThread // implements IPerson
     Console.println(Console.GREEN, "> STARTING HOUSE THREAD #" + id);
     try {
       int depositID;
+      int totalWaterConsumed = 0;
       while (true) {
         depositID = pickDeposit();
         deposits[depositID].useWater(id, position, console, waterConsumptionRate);
@@ -57,7 +58,7 @@ public class House extends CThread // implements IPerson
             deposits[depositID].stopRepleneshing(id, position, waterConsumptionRate);
 
         totalWaterConsumed += waterConsumptionRate;
-        if (totalWaterConsumed >= 10) {
+        if (totalWaterConsumed >= maxWaterConsumption) {
           Console.println(Console.GREEN,"> HOUSE #" + id + " CONSUMED A TOTAL OF:\n    > " + totalWaterConsumed + " LITTERS OF WATER.");
           break;
         }
