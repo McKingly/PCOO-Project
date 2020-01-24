@@ -5,7 +5,7 @@ package configuration;
  */
 public class Configuration {
 
-  public static final int MAP_UPDATE_SPEED = 350;
+  public static final int MAP_UPDATE_SPEED = 100;
 
   public static final String DEFAULT_MAP = "AltMap2.txt";
 
@@ -31,7 +31,10 @@ public class Configuration {
   public static final String CORNER_PIPE_UP = "images/CornerPipeTop.png";
   public static final String CORNER_PIPE_DOWN = "images/CornerPipeBottom.png";
 
-  public static final int HOUSE_WATER_CONSUMPTION_RATE = 3;
-  public static final int HOUSE_MAX_WATER_CONSUMPTION = 9;
-  public static final int DEPOSIT_MAX_WATER_CAPACITY = 15;
+  public static final int HOUSE_WATER_CONSUMPTION_RATE = 4;
+  public static final int HOUSE_MAX_WATER_CONSUMPTION = 15;
+  public static final int DEPOSIT_MAX_WATER_CAPACITY = 12;
+
+  public static final int NB_WORKERS = 2;
+  
 }

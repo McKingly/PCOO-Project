@@ -40,16 +40,21 @@ public class Main {
             i++;
         }
 
-        new CThread(new Worker(0,dep, con)).start();
-        new CThread(new Worker(1,dep, con)).start();
+        for (int j = 0; j < Configuration.NB_WORKERS; j++) {
+            new CThread(new Worker(j,dep, con)).start();
+        }
         
-        CThread[] t = new CThread[map.personsPositions.length];
-
+        CThread[] t = new CThread[map.housesPositions.length];
+        
         i = 0;
-        for (Position position : map.personsPositions) {
-            t[i] = new CThread(new House(dep, con, position, Configuration.HOUSE_WATER_CONSUMPTION_RATE, Configuration.HOUSE_MAX_WATER_CONSUMPTION));
+        for (Position position : map.housesPositions) {
+            t[i] = new CThread(new House(dep, con, position, Configuration.HOUSE_WATER_CONSUMPTION_RATE,
+                                                             Configuration.HOUSE_MAX_WATER_CONSUMPTION));
             t[i].start();
             i++;
         }
+
+        
+
     }
 }

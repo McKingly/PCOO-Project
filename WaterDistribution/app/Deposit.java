@@ -1,7 +1,7 @@
 package app;
 
-import pt.ua.gboard.basic.Position;
 import pt.ua.concurrent.Console;
+import pt.ua.gboard.basic.Position;
 
 public class Deposit {
 
@@ -32,6 +32,11 @@ public class Deposit {
     this.maxCapacity = maxCapacity;
   }
 
+  
+  /** 
+   * @param dest
+   * @param waterVolume
+   */
   public void useWater(Position dest, int waterVolume) {
     assert waterVolume >= 0 : "Water consumed can't be lower than 0";
     assert (!isEmpty() && hasEnoughWater(waterVolume)) : "No more water available";
@@ -40,8 +45,7 @@ public class Deposit {
     waterLevel -= waterVolume;
   }
 
-  
-  /** 
+  /**
    * @param volume
    * @return boolean
    */
@@ -50,8 +54,7 @@ public class Deposit {
     return waterLevel >= volume;
   }
 
-  
-  /** 
+  /**
    * @return boolean
    */
   public boolean isEmpty() {
@@ -60,11 +63,10 @@ public class Deposit {
 
   public void refill() {
     waterLevel = maxCapacity;
-    Console.println(Console.YELLOW,"> DEPOSIT #" + id + " REFILLED.");
+    Console.println(Console.YELLOW, "> DEPOSIT #" + id + " REFILLED.");
   }
 
-  
-  /** 
+  /**
    * @param dest
    */
   public void startStopRepleneshing(Position dest, int volWater) {

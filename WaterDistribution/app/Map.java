@@ -1,12 +1,15 @@
 package app;
 
-import pt.ua.gboard.*;
-import pt.ua.gboard.basic.*;
-import pt.ua.gboard.games.Labyrinth;
-
 import java.awt.Color;
 
 import configuration.Configuration;
+import pt.ua.gboard.GBoard;
+import pt.ua.gboard.Gelem;
+import pt.ua.gboard.basic.FilledGelem;
+import pt.ua.gboard.basic.ImageGelem;
+import pt.ua.gboard.basic.MutableStringGelem;
+import pt.ua.gboard.basic.Position;
+import pt.ua.gboard.games.Labyrinth;
 
 public class Map {
 
@@ -15,22 +18,22 @@ public class Map {
   Gelem[] gelems;
 
   public Position[] depositsPositions;
-  Position[] consolesPositions;
-  Position[] personsPositions;
-  Position[] tJunction3Positions;
+  public Position[] consolesPositions;
+  public Position[] housesPositions;
 
-  char[] extraSymbols = { Configuration.DEPOSIT_SYMBOL, Configuration.CONSOLE_SYMBOL, Configuration.PERSON_SYMBOL,
-      Configuration.HORIZONTAL_PIPE_SYMBOL, Configuration.VERTICAL_PIPE_SYMBOL, Configuration.T_JUNCTION_PIPE_1_SYMBOL,
-      Configuration.T_JUNCTION_PIPE_2_SYMBOL, Configuration.T_JUNCTION_PIPE_3_SYMBOL,
-      Configuration.CORNER_PIPE_UP_SYMBOL, Configuration.CORNER_PIPE_DOWN_SYMBOL, ' ' };
+  private final char[] extraSymbols = { Configuration.DEPOSIT_SYMBOL, Configuration.CONSOLE_SYMBOL,
+      Configuration.PERSON_SYMBOL, Configuration.HORIZONTAL_PIPE_SYMBOL, Configuration.VERTICAL_PIPE_SYMBOL,
+      Configuration.T_JUNCTION_PIPE_1_SYMBOL, Configuration.T_JUNCTION_PIPE_2_SYMBOL,
+      Configuration.T_JUNCTION_PIPE_3_SYMBOL, Configuration.CORNER_PIPE_UP_SYMBOL,
+      Configuration.CORNER_PIPE_DOWN_SYMBOL, ' ' };
 
-  final int pipeLayer = 0;
-  final int waterLayer = 1;
-  final int numberLayer = 2;
+  private final int pipeLayer = 0;
+  private final int waterLayer = 1;
+  private final int numberLayer = 2;
 
-  final int updateSpeed;
+  private final int updateSpeed;
 
-  static Labyrinth maze = null;
+  private Labyrinth maze = null;
 
   /**
    * @param mapFile
@@ -66,12 +69,12 @@ public class Map {
 
     this.consolesPositions = maze.roadSymbolPositions(Configuration.CONSOLE_SYMBOL);
     for (Position pipe : consolesPositions) {
-      board.draw(gelems[1], pipe.line()-1, pipe.column()-2, pipeLayer);
+      board.draw(gelems[1], pipe.line() - 1, pipe.column() - 2, pipeLayer);
       System.out.println(gelems[1]);
     }
 
-    this.personsPositions = maze.roadSymbolPositions(Configuration.PERSON_SYMBOL);
-    for (Position pipe : personsPositions) {
+    this.housesPositions = maze.roadSymbolPositions(Configuration.PERSON_SYMBOL);
+    for (Position pipe : housesPositions) {
       board.draw(gelems[2], pipe.line(), pipe.column(), pipeLayer);
     }
 
@@ -96,7 +99,7 @@ public class Map {
       board.draw(new MutableStringGelem("0", Color.red), pipe.line(), pipe.column() + 1, numberLayer);
     }
 
-    this.tJunction3Positions = maze.roadSymbolPositions(Configuration.T_JUNCTION_PIPE_3_SYMBOL);
+    Position[] tJunction3Positions = maze.roadSymbolPositions(Configuration.T_JUNCTION_PIPE_3_SYMBOL);
     for (Position pipe : tJunction3Positions) {
       board.draw(gelems[7], pipe.line() - 1, pipe.column() - 1, pipeLayer);
       board.draw(new MutableStringGelem("0", Color.red), pipe.line(), pipe.column() - 1, numberLayer);
@@ -106,133 +109,135 @@ public class Map {
 
     for (Position pipe : maze.roadSymbolPositions(Configuration.CORNER_PIPE_UP_SYMBOL)) {
       board.draw(gelems[8], pipe.line(), pipe.column(), pipeLayer);
-      board.draw(new MutableStringGelem("0", Color.red), pipe.line()+1, pipe.column() , numberLayer);
-      board.draw(new MutableStringGelem("0", Color.red), pipe.line(), pipe.column()+1 , numberLayer);
+      board.draw(new MutableStringGelem("0", Color.red), pipe.line() + 1, pipe.column(), numberLayer);
+      board.draw(new MutableStringGelem("0", Color.red), pipe.line(), pipe.column() + 1, numberLayer);
     }
 
     for (Position pipe : maze.roadSymbolPositions(Configuration.CORNER_PIPE_DOWN_SYMBOL)) {
       board.draw(gelems[9], pipe.line() - 1, pipe.column(), pipeLayer);
-      board.draw(new MutableStringGelem("0", Color.red), pipe.line()-1, pipe.column(), numberLayer);
-      board.draw(new MutableStringGelem("0", Color.red), pipe.line(), pipe.column()+1, numberLayer);
+      board.draw(new MutableStringGelem("0", Color.red), pipe.line() - 1, pipe.column(), numberLayer);
+      board.draw(new MutableStringGelem("0", Color.red), pipe.line(), pipe.column() + 1, numberLayer);
     }
 
   }
 
-  /**
-     * @param lin
-     * @param col
-     * @param dest
-     */
-    public void updateMap(int lin, int col, Position dest, int newWaterVol) {
-      assert validPosition(dest);
+  
+  /** 
+   * @param lin
+   * @param col
+   * @param dest
+   * @param newWaterVol
+   */
+  public synchronized void updateMap(int lin, int col, Position dest, int newWaterVol) {
+    assert validPosition(dest);
 
-      GBoard.sleep(updateSpeed);
-        
-            if (dest.line() == lin && dest.column() == col)
-              return;
+    GBoard.sleep(updateSpeed);
 
-            Gelem currentPipe = board.topGelem(lin, col, pipeLayer, pipeLayer);
+    if (dest.line() == lin && dest.column() == col)
+      return;
 
-            if (currentPipe.equals(gelems[3])) {
-              //System.out.println("Horizontal Pipe");
-              updateVolumeWaterGelem(new Position(lin, col), newWaterVol, true);
-              updateMap(lin, col + 2, dest, newWaterVol);
+    Gelem currentPipe = board.topGelem(lin, col, pipeLayer, pipeLayer);
 
-            } else if (currentPipe.equals(gelems[4])) {
-              //System.out.println("Vertical Pipe");
-              if (board.topGelem(lin, col, numberLayer, numberLayer) == null ){
-                updateVolumeWaterGelem(new Position(lin-1, col), newWaterVol, false);
-                updateMap(lin-2, col, dest, newWaterVol);
-                  
-              } else{
-                updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
-                updateMap(lin+2, col, dest, newWaterVol);
-              }
-            // Corner Pipe Top
-            } else if (currentPipe.equals(gelems[8])) {
-              //System.out.println("Corner Pipe top");
-              updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
-              updateVolumeWaterGelem(new Position(lin-1, col+1), newWaterVol, false);
-              updateMap(lin - 1, col + 2, dest, newWaterVol);
+    if (currentPipe.equals(gelems[3])) {
+      // System.out.println("Horizontal Pipe");
+      updateVolumeWaterGelem(new Position(lin, col), newWaterVol, true);
+      updateMap(lin, col + 2, dest, newWaterVol);
 
-            // Corner Pipe Bottom
-            } else if (currentPipe.equals(gelems[9])) {
-              //System.out.println("Corner Pipe Down");
-              updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
-              updateVolumeWaterGelem(new Position(lin+1, col+1), newWaterVol, false);
-              updateMap(lin + 1, col + 2, dest, newWaterVol);
-            
-            // T-Junction Pipe V2
-            } else if (currentPipe.equals(gelems[6])) {
-              //System.out.println("T-Junction Pipe V2");
-              updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);              
-              
-              if(board.exists(gelems[6], lin-2, col)) {
-                //System.out.println("  > Enters through the bottom opening");
-                // Exits through the top opening
-                if (dest.line() == lin - 1) {
-                  updateVolumeWaterGelem(new Position(lin-1, col+1), newWaterVol, true);
-                  updateMap(lin - 1, col + 2, dest, newWaterVol);
-                // Exits through the right opening
-                }else {
-                  updateVolumeWaterGelem(new Position(lin-2, col), newWaterVol, false);
-                  updateMap(lin - 3, col, dest, newWaterVol);
-                }
-              }else {
-                //System.out.println("  > Enters through the top opening");
-                // Exits through the right opening
-                if (dest.line() == lin + 1) {
-                  updateVolumeWaterGelem(new Position(lin+1, col+1), newWaterVol, true);
-                  updateMap(lin + 1, col + 2, dest, newWaterVol);
-                // Exits through the bottom opening
-                } else {
-                  updateVolumeWaterGelem(new Position(lin+2, col), newWaterVol, false);
-                  updateMap(lin + 3, col, dest, newWaterVol);
-                }
-              }
+    } else if (currentPipe.equals(gelems[4])) {
+      // System.out.println("Vertical Pipe");
+      if (board.topGelem(lin, col, numberLayer, numberLayer) == null) {
+        updateVolumeWaterGelem(new Position(lin - 1, col), newWaterVol, false);
+        updateMap(lin - 2, col, dest, newWaterVol);
 
-            // T-Junction Pipe V3
-            } else if (currentPipe.equals(gelems[7])) {
+      } else {
+        updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
+        updateMap(lin + 2, col, dest, newWaterVol);
+      }
+      // Corner Pipe Top
+    } else if (currentPipe.equals(gelems[8])) {
+      // System.out.println("Corner Pipe top");
+      updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
+      updateVolumeWaterGelem(new Position(lin - 1, col + 1), newWaterVol, false);
+      updateMap(lin - 1, col + 2, dest, newWaterVol);
 
-              //System.out.println("T-Junction Pipe V3");
-              if(board.exists(gelems[7],lin-1, col)) {
-                //System.out.println("  > Enters through the left opening");
-                updateVolumeWaterGelem(new Position(lin, col), newWaterVol, true);
+      // Corner Pipe Bottom
+    } else if (currentPipe.equals(gelems[9])) {
+      // System.out.println("Corner Pipe Down");
+      updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
+      updateVolumeWaterGelem(new Position(lin + 1, col + 1), newWaterVol, false);
+      updateMap(lin + 1, col + 2, dest, newWaterVol);
 
-                // Exits through the bottom opening
-                if (lin > dest.line()) {
-                  updateVolumeWaterGelem(new Position(lin-1, col+1), newWaterVol, false);
-                  updateMap(lin - 2, col + 1, dest, newWaterVol);
+      // T-Junction Pipe V2
+    } else if (currentPipe.equals(gelems[6])) {
+      // System.out.println("T-Junction Pipe V2");
+      updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
 
-                // Exits through the top opening
-                } else {
-                  updateVolumeWaterGelem(new Position(lin+1, col+1), newWaterVol, false);
-                  updateMap(lin + 2, col + 1, dest, newWaterVol);
-                }
+      if (board.exists(gelems[6], lin - 2, col)) {
+        // System.out.println(" > Enters through the bottom opening");
+        // Exits through the top opening
+        if (dest.line() == lin - 1) {
+          updateVolumeWaterGelem(new Position(lin - 1, col + 1), newWaterVol, true);
+          updateMap(lin - 1, col + 2, dest, newWaterVol);
+          // Exits through the right opening
+        } else {
+          updateVolumeWaterGelem(new Position(lin - 2, col), newWaterVol, false);
+          updateMap(lin - 3, col, dest, newWaterVol);
+        }
+      } else {
+        // System.out.println(" > Enters through the top opening");
+        // Exits through the right opening
+        if (dest.line() == lin + 1) {
+          updateVolumeWaterGelem(new Position(lin + 1, col + 1), newWaterVol, true);
+          updateMap(lin + 1, col + 2, dest, newWaterVol);
+          // Exits through the bottom opening
+        } else {
+          updateVolumeWaterGelem(new Position(lin + 2, col), newWaterVol, false);
+          updateMap(lin + 3, col, dest, newWaterVol);
+        }
+      }
 
-              }else {
-                
-                updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
+      // T-Junction Pipe V3
+    } else if (currentPipe.equals(gelems[7])) {
 
-                if(board.exists(gelems[7],lin, col-1)){
-                  //System.out.println("  > Enters through the top opening");
-                  updateVolumeWaterGelem(new Position(lin+2, col), newWaterVol, false);
-                  updateMap(lin + 3, col, dest, newWaterVol);
+      // System.out.println("T-Junction Pipe V3");
+      if (board.exists(gelems[7], lin - 1, col)) {
+        // System.out.println(" > Enters through the left opening");
+        updateVolumeWaterGelem(new Position(lin, col), newWaterVol, true);
 
-                }else {
-                  //System.out.println("  > Enters through the bottom opening");
-                  updateVolumeWaterGelem(new Position(lin-2, col), newWaterVol, false);
-                  updateMap(lin - 3, col, dest, newWaterVol);
+        // Exits through the bottom opening
+        if (lin > dest.line()) {
+          updateVolumeWaterGelem(new Position(lin - 1, col + 1), newWaterVol, false);
+          updateMap(lin - 2, col + 1, dest, newWaterVol);
 
-                }
-              }
-            } else {
-              System.out.println("Can't figure out the kind of pipe it is");
-              System.out.println(lin);
-              System.out.println(col);
-            }
-          
+          // Exits through the top opening
+        } else {
+          updateVolumeWaterGelem(new Position(lin + 1, col + 1), newWaterVol, false);
+          updateMap(lin + 2, col + 1, dest, newWaterVol);
+        }
+
+      } else {
+
+        updateVolumeWaterGelem(new Position(lin, col), newWaterVol, false);
+
+        if (board.exists(gelems[7], lin, col - 1)) {
+          // System.out.println(" > Enters through the top opening");
+          updateVolumeWaterGelem(new Position(lin + 2, col), newWaterVol, false);
+          updateMap(lin + 3, col, dest, newWaterVol);
+
+        } else {
+          // System.out.println(" > Enters through the bottom opening");
+          updateVolumeWaterGelem(new Position(lin - 2, col), newWaterVol, false);
+          updateMap(lin - 3, col, dest, newWaterVol);
+
+        }
+      }
+    } else {
+      System.err.println("INVALID PIPE TYPE FOUND");
+      ;
+      System.exit(1);
     }
+
+  }
 
   /**
    * @param p
@@ -250,6 +255,11 @@ public class Map {
     }
   }
 
+  /**
+   * @param p
+   * @param newWaterVol
+   * @param isPipeHorizontal
+   */
   private void updateVolumeWaterGelem(Position p, int newWaterVol, boolean isPipeHorizontal) {
 
     MutableStringGelem msGelem = (MutableStringGelem) board.topGelem(p.line(), p.column(), numberLayer, numberLayer);
@@ -258,18 +268,18 @@ public class Map {
     // When the flow of water in a pipe is decreasing
     if (pipeWaterVol + newWaterVol == 0) {
       if (board.topGelem(p.line(), p.column(), waterLayer, waterLayer).equals(gelems[10]))
-        if(board.topGelem(p.line(), p.column(), pipeLayer, pipeLayer).equals(gelems[6]))
-          board.erase(gelems[10], p.line(), p.column()-1, waterLayer);
+        if (board.topGelem(p.line(), p.column(), pipeLayer, pipeLayer).equals(gelems[6]))
+          board.erase(gelems[10], p.line(), p.column() - 1, waterLayer);
         else
           board.erase(gelems[10], p.line(), p.column(), waterLayer);
       else
         board.erase(gelems[11], p.line(), p.column(), waterLayer);
 
-    // When the flow of water in a pipe is increasing
+      // When the flow of water in a pipe is increasing
     } else if (pipeWaterVol == 0) {
       if (isPipeHorizontal)
-        if(board.topGelem(p.line(), p.column(), pipeLayer, pipeLayer).equals(gelems[6]))
-          board.draw(gelems[10], p.line(), p.column()-1, waterLayer);
+        if (board.topGelem(p.line(), p.column(), pipeLayer, pipeLayer).equals(gelems[6]))
+          board.draw(gelems[10], p.line(), p.column() - 1, waterLayer);
         else
           board.draw(gelems[10], p.line(), p.column(), waterLayer);
       else
