@@ -51,23 +51,12 @@ public class AlertConsole {
       Console.println(Console.YELLOW,"> ALERT FOR DEPOSIT #" + depositId + " ALREADY EXISTS.");
     }
   }
-
-  /** 
-   * @return int
-   */
-  public int readConsole() {
-    assert !queue.isEmpty();
-    System.out.println(queue);
-    return queue.peek() ;
-  }
   
   /** 
    * @return Position
    */
   public int removeAlert() {
     assert !queue.isEmpty();
-    Console.println(Console.RED,"> REMOVING A VALUE !!!!!!!!!!!!!!!!!!!!!!!!.");
-    System.out.println(queue);
     return queue.remove();
   }
 

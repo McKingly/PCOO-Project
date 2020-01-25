@@ -52,21 +52,6 @@ public class SharedAlertConsole {
       mtx.unlock();
     }
   }
-
-  /** 
-   * @return Position
-   */
-  public int removeAlert() {
-    mtx.lock();
-    try {
-      while (console.isEmpty())
-        mtxCV.await();
-      return console.removeAlert();
-    } finally {
-      mtx.unlock();
-    }
-  }
-
   
   /** 
    * @param destination
