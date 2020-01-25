@@ -1,7 +1,10 @@
 package app;
 
 import configuration.Configuration;
+
+import pt.ua.concurrent.Console;
 import pt.ua.concurrent.CThread;
+
 import pt.ua.gboard.basic.*;
 import pt.ua.gboard.games.Labyrinth;
 
@@ -54,6 +57,13 @@ public class Main {
             i++;
         }
 
+        for (CThread cThread : t) {
+            cThread.join();
+        }
+
+        Console.println(Console.RED, "> ALL CLIENTS ENDED");
+
+        System.exit(0);
         
 
     }

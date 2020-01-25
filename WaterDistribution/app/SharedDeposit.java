@@ -33,7 +33,7 @@ public class SharedDeposit {
     mtx.lock();
     try {
       while (!deposit.hasEnoughWater(waterVol)) {
-        Console.println(Console.YELLOW, "> HOUSE #" + id + " NEEDS MORE WATER THAN IS AVAILABLE");
+        Console.println(Console.YELLOW, "> HOUSE #" + id + " NEEDS MORE WATER THAN IS AVAILABLE IN DEPOSIT #"+deposit.getId());
         con.addAlert(deposit.getId());
         mtxCV.await();
       }
@@ -115,5 +115,9 @@ public class SharedDeposit {
    */
   public int getMaxCapacity() {
     return deposit.getMaxCapacity();
+  }
+
+  public Position getPosition(){
+    return deposit.getPosition();
   }
 }

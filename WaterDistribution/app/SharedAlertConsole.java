@@ -47,7 +47,7 @@ public class SharedAlertConsole {
     try {
       while (console.isEmpty())
         mtxCV.await();
-      return console.readConsole();
+      return console.removeAlert();
     } finally {
       mtx.unlock();
     }
@@ -56,7 +56,7 @@ public class SharedAlertConsole {
   /** 
    * @return Position
    */
-  public Position removeAlert() {
+  public int removeAlert() {
     mtx.lock();
     try {
       while (console.isEmpty())

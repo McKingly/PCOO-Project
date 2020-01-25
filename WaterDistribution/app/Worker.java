@@ -1,5 +1,6 @@
 package app;
 
+import configuration.Configuration;
 import pt.ua.concurrent.CThread;
 import pt.ua.concurrent.Console;
 import pt.ua.gboard.basic.Position;
@@ -36,8 +37,8 @@ public class Worker extends CThread // implements IPerson, Runnable
     while (true) {
       depositId = console.readConsole();
       waterVol = deposits[depositId].getMaxCapacity();
-      destination = console.removeAlert();
-      Console.println(Console.MAGENTA, "> WORKER #" + id + " TURNING VALVE TO REFILL DEPOSIT #"+depositId);
+      destination = deposits[depositId].getPosition();      
+      Console.println(Console.MAGENTA, "> WORKER #" + id + " TURNING VALVE TO REFILL DEPOSIT #"/*+depositId*/);
       console.startReplenishing(destination, waterVol);
       deposits[depositId].refillDeposit(id);
       console.stopReplenishing(destination, waterVol);

@@ -51,12 +51,11 @@ public class House extends CThread // implements IPerson
       int totalWaterConsumed = 0;
       while (true) {
         depositID = pickDeposit();
+        Console.println(Console.BLUE,"> HOUSE #" + id + " CONNECTING TO DEPOSIT #" + depositID);
         deposits[depositID].useWater(id, position, console, waterConsumptionRate);
         deposits[depositID].startRepleneshing(id, position, waterConsumptionRate);
-        Console.println(Console.BLUE,
-            "> HOUSE #" + id + " IS CONSUMING " + waterConsumptionRate + " LITTERS FROM DEPOSIT #" + depositID);
-            deposits[depositID].stopRepleneshing(id, position, waterConsumptionRate);
-
+        deposits[depositID].stopRepleneshing(id, position, waterConsumptionRate);
+        Console.println(Console.BLUE,"> HOUSE #" + id + " IS CONSUMING " + waterConsumptionRate + " LITTERS FROM DEPOSIT #" + depositID);
         totalWaterConsumed += waterConsumptionRate;
         if (totalWaterConsumed >= maxWaterConsumption) {
           Console.println(Console.GREEN,"> HOUSE #" + id + " CONSUMED A TOTAL OF:\n    > " + totalWaterConsumed + " LITTERS OF WATER.");
@@ -64,7 +63,7 @@ public class House extends CThread // implements IPerson
         }
       }
     } catch (AssertionError e) {
-
+      System.exit(1);
     }
   }
 

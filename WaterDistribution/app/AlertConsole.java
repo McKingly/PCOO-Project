@@ -42,10 +42,13 @@ public class AlertConsole {
    * @param depositId
    */
   public void addAlert(int depositId) {
-    assert depositId > 0;
+    assert depositId >= 0: "Invalid depositID";
     if(!queue.contains(depositId)){
       Console.println(Console.YELLOW,"> ALERT SENT TO CONSOLE - DEPOSIT #" + depositId + " EMPTY.");
       queue.add(depositId);
+    
+    } else{
+      Console.println(Console.YELLOW,"> ALERT FOR DEPOSIT #" + depositId + " ALREADY EXISTS.");
     }
   }
 
@@ -54,15 +57,18 @@ public class AlertConsole {
    */
   public int readConsole() {
     assert !queue.isEmpty();
+    System.out.println(queue);
     return queue.peek() ;
   }
   
   /** 
    * @return Position
    */
-  public Position removeAlert() {
+  public int removeAlert() {
     assert !queue.isEmpty();
-    return map.depositsPositions[queue.remove()];
+    Console.println(Console.RED,"> REMOVING A VALUE !!!!!!!!!!!!!!!!!!!!!!!!.");
+    System.out.println(queue);
+    return queue.remove();
   }
 
   

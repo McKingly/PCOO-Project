@@ -88,4 +88,8 @@ public class Deposit {
   public int getMaxCapacity() {
     return maxCapacity;
   }
+
+  public Position getPosition(){
+    return position;
+  }
 }
